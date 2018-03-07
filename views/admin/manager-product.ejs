@@ -1,0 +1,75 @@
+<% include top %>
+    <div class="col-sm-9 col-xs-12 manager-product mt-3">
+        <div class="row">
+            <div class="jumbotron bg-white btn-block">
+                <h1 class="display-3">Quản Lý Sản Phẩm</h1>
+                <div class="manager-product-search">
+                   
+                        <div class="form-group">
+                            <input type="text" id="form-search" class="form-control" placeholder="Tìm kiếm tên sản phẩm..." >
+                            <!-- <input type="submit" id="formSearch"  class="btn btn-search"> -->
+                        </div>
+                    
+                </div>
+            </div>
+            <div class="col-sm-12 show-value mt-3">
+                <div class="float-right">
+                    <span>Lựa Chọn </span>
+                    <a href="/admin/managerProduct" class="btn btn-primary" >Mặc Định</a>
+                    <a href="" class="btn btn-warning" id="Increase">Giá tăng dần</a>
+                    <a href=""class="btn btn-primary" id="Decrease" >Giá giảm dần</a>
+                </div>
+            </div>
+            <div class="col-sm-12 show-sp mt-3">
+                <div class="row show-sp-search">
+                    <% product.forEach(function(item){ %>
+                    <div class="col-sm-4 mt-3 col-xs-12 ">
+                        <div class="card-product">
+                            <div class="card text-left|center|right">
+                                <div class="img-product">
+                                    <a href="/show/<%= item.link %>"><img class="card-img-top" src="/uploads/<%= item.image  %>" alt=""></a>
+                                </div>
+                                <div class="card-body">
+                                <% function processString(gt){
+                                    var k=gt.slice(30);
+                                    if(k){
+                                        gt=gt.slice(0,30)+"...";
+                                    }else{
+                                        gt=gt.slice(0,30);
+                                    }
+                                    return gt;
+                                } ;%>
+                                    <a href="#"><h4 class="card-title"><%= processString(item.name) %></h4></a>
+                                    <p class="card-text price-new"><%= format(item.price_new) %> VNĐ</p>
+                                    <p class="card-text "> 
+                                        <span class="price-old"><%= format(item.price_old) %> VNĐ</span> 
+                                        <!-- nếu giảm giá thì mới hiện -->
+                                        <% if(item.price_sale){ %>
+                                        <span class="price-sale"><%= item.price_sale%>%</span>
+                                        <%}%>
+                                    </p>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="/admin/editproduct/<%= item.link %>.<%= item._id %>"><i class="fas fa-edit"></i> Chỉnh Sửa</a>
+                                    <a href="<%= item._id %>" id="admin-del-product" class="float-right"><i class="fas fa-times"></i> Xóa</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- col-sm-3 -->
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+        <div class="Hu-load text-center" style="display:none">
+            <img src="/images/o2mtzbxKtid.gif" style="margin:auto" alt="">
+        </div>
+        <div class="checksp text-center"></div>
+        <div class="icons-load text-center mt-5">
+                <div class="col-sm-12" id="showProductMain">
+                    <a href="#" class="btn btn-outline-danger" id="showProduct" idsp="<%=AmountProduct%>">Xem Thêm</a>
+                </div>
+            </div>
+    </div>
+    <!-- managerinfo col:12 -->
+<% include bottom %>

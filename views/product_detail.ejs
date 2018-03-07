@@ -1,0 +1,272 @@
+<% include header%>
+<link rel="stylesheet" href="/owlcarousel/docs.theme.min.css">
+    <main class="main">
+        <div class="product-detail">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-9 product-fix">
+                                <div class="check-product">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="show-product">
+                                                <div class="large" style='background:url("/uploads/<%= productShow.image %>") no-repeat'></div>
+                                                <div class="img-product-main">
+                                                    <img src="/uploads/<%= productShow.image %>" alt="<%= productShow.link %>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="info-product">
+                                                <div class="title-product">
+                                                    <h1><%= productShow.name %></h1>
+                                                </div>
+                                                <div class="evaluate-product">
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <span class="evaluate-check" >Đánh giá</span>
+                                                </div>
+                                                <!-- evaluate-product -->
+                                                <div class="des-product">
+
+                                                    <%- productShow.content %>
+                                                    
+                                                </div>
+                                                <!-- des-product -->
+                                                <div class="price-product">
+                                                    <span id="price">
+                                                        <span id="old-price"><%= format(productShow.price_old)%> VNĐ</span>
+                                                        <br>
+                                                        <% var thanhtien= productShow.price_old-(productShow.price_old*productShow.price_sale/100) %>
+                                                        <span id="new-price">
+                                                            <span><%= format(thanhtien)%> VNĐ</span>
+                                                        </span>
+                                                    </span>
+                                                    
+                                                    <span class="status-product pull-right">
+                                                        <span>
+                                                            <span class="float-right">Còn hàng</span>
+                                                        
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                                <!-- price-product -->
+                                                <hr>
+                                                <div class="add-cart">
+                                                    <a href="/show/cart/<%= productShow._id %>" class="btn btn-primary">Thêm giỏ hàng</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- row -->
+                                </div>
+                                <hr>
+                                <div class="description-product">
+                                    <section class="container py-4">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h2>Thông tin sản phẩm</h2>
+                                                <ul id="tabsJustified" class="nav nav-tabs">
+                                                    <li class="nav-item"><a href="" data-target="#home1" data-toggle="tab" class="nav-link small text-uppercase">Thông Tin</a></li>
+                                                    <li class="nav-item"><a href="" data-target="#profile1" data-toggle="tab" class="nav-link small text-uppercase active">Chi tiết sản phẩm</a></li>
+                                                    <li class="nav-item"><a href="" data-target="#messages1" data-toggle="tab" class="nav-link small text-uppercase">Góp Ý</a></li>
+                                                </ul>
+                                                <br>
+                                                <div id="tabsJustifiedContent" class="tab-content">
+                                                    <div id="home1" class="tab-pane fade">
+                                                        <%- productShow.description; %>
+                                                    </div>
+                                                    <!-- #home1 -->
+                                                    <div id="profile1" class="tab-pane fade active show">
+                                                        <%- productShow.description_detail%>
+                                                    </div>
+                                                    <!-- #profile1 -->
+                                                    <div id="messages1" class="tab-pane fade">
+                                                        <form action="" method="post">
+                                                            <div class="form-group">
+                                                                <label for="">Email</label>
+                                                                <input type="email" name="" required class="form-control" placeholder="" aria-describedby="helpId">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="">Tiêu đề</label>
+                                                                <input type="text" name=""   class="form-control" placeholder="" aria-describedby="helpId">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="">Mô tả</label>
+                                                                <br>
+                                                                <textarea name="" id="" required cols="70" rows="10" ></textarea>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <button type="submit" class="btn btn-primary btn-block">Gửi</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <!-- #messages1 -->
+                                                </div>
+                                                <!-- #tabsJustifiedContent -->
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                                <!-- description-product -->
+                                <!-- SP liên quan -->
+                                <div class="involve-product">
+                                    <div class="involve-title">
+                                        <h3>Sản phẩm liên quan</h3>
+                                    </div>
+                                    <section id="demosa">
+                                        <div class="row">
+                                            <div class="large-12 columns">
+                                            <div class="owl-carousel owl-theme">
+                                                <% productRandom.forEach(function(item){ %>
+                                                <div class="item">
+                                                    <div class="card-product">
+                                                        <div class="card text-left|center|right">
+                                                            <div class="img-product">
+                                                                <a href="/show/<%= item.link %>"><img class="card-img-top" src="/uploads/<%= item.image %>" alt="<%= item.name %>"></a>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <h4 class="card-title"><%= processString(item.name) %></h4>
+                                                                <p class="card-text"><%= format(item.price_old) %> VNĐ</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <%});%>
+                                            </div>
+                                            
+                                            <script>
+                                                $(document).ready(function() {
+                                                var owl = $('.owl-carousel');
+                                                owl.owlCarousel({
+                                                    margin: 10,
+                                                    nav: true,
+                                                    loop: true,
+                                                    navText:['<i class="fas fa-chevron-circle-left"></i>','<i class="fas fa-chevron-circle-right"></i>'],
+                                                    responsive: {
+                                                    0: {
+                                                        items: 1
+                                                    },
+                                                    600: {
+                                                        items: 3
+                                                    },
+                                                    1000: {
+                                                        items: 4
+                                                    }
+                                                    }
+                                                })
+                                                })
+                                            </script>
+                                        </div>
+                                        <!-- large-12 columns -->
+                                    </div>
+                                    <!-- row -->
+                                    </section>
+                                </div>
+                                <!-- End sản phẩm liên quan -->
+                            </div>
+                            <!-- col:9 -->
+                            <div class="col-sm-3">
+                                <div class="frames-new-product">
+                                    <h4 class="new-product-title">Mới Nhất</h4>
+                                    <%productNew.forEach(function(item){ %>
+                                        <div class="media mt-3">
+                                            <a class="d-flex align-self-bottom" href="/show/<%= item.link %>">
+                                                <img src="/uploads/<%= item.image %>" class="" alt="">
+                                            </a>
+                                            <div class="media-body">
+                                                <p class="media-title"><%= processString(item.name) %></p>
+                                                <p class="media-price"><%= format(item.price_old) %> VNĐ</p>
+                                            </div>
+                                        </div>
+                                        <!-- media -->
+                                        <hr>
+                                    <%}) %>
+                                    <% function processString(gt){
+                                            var k=gt.slice(15);
+                                                if(k){
+                                                    gt=gt.slice(0,14)+"...";
+                                                }else{
+                                                    gt=gt.slice(0,14);
+                                                }
+                                            return gt;
+                                        } ;%>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="comment-product">
+                            <h3 class="title-comment-product">Các câu hỏi về sản phẩm này</h3>
+                            <p style="display:none">Vui lòng <span><a  href="#form-dangnhap" data-toggle="modal">Đăng Nhập </a></span> hoặc <span> <a href="/register">Đăng ký</a></span> ngay! để đặt câu hỏi cho nhà bán hàng</p>
+                            <div class="comment-query">
+                                <div class="frames-query">
+                                    <textarea name="" class="comment-query-main" maxlength="300" id="comment-query-main"  placeholder="Ví dụ: Chất liệu sản phẩm là gì ?"></textarea>
+                                    <a href="#" class="submit-comment btn btn-danger">Đặt Câu Hỏi</a>
+                                    <div class="number-max"><span class="number-cout">0</span>/300</div>
+                                </div>
+                            </div>
+                            <div class="des-comment-product">
+                                <div class="user-comment">
+                                    <span class="img-user">
+                                        <i class="fas fa-user-circle"></i>
+                                    </span>
+                                    <span class="name-user">
+                                        Trần Văn Cương
+                                    </span>
+                                    <div class="des-comment">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus possimus atque iusto sed dolor accusamus nihil illo, doloribus quae enim officia necessitatibus magni quasi beatae ullam qui quam! Maiores, rem!</div>
+                                </div>
+                            </div>
+                            <!-- des-comment-product -->
+                            <div class="des-comment-product">
+                                <div class="user-comment">
+                                    <span class="img-user">
+                                        <i class="fas fa-user-circle"></i>
+                                    </span>
+                                    <span class="name-user">
+                                        Trần Văn Cương
+                                    </span>
+                                    <div class="des-comment">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus possimus atque iusto sed dolor accusamus nihil illo, doloribus quae enim officia necessitatibus magni quasi beatae ullam qui quam! Maiores, rem!</div>
+                                </div>
+                            </div>
+                            <!-- des-comment-product -->
+                            <div class="des-comment-product">
+                                <div class="user-comment">
+                                    <span class="img-user">
+                                        <i class="fas fa-user-circle"></i>
+                                    </span>
+                                    <span class="name-user">
+                                        Trần Văn Cương
+                                    </span>
+                                    <div class="des-comment">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus possimus atque iusto sed dolor accusamus nihil illo, doloribus quae enim officia necessitatibus magni quasi beatae ullam qui quam! Maiores, rem!</div>
+                                </div>
+                            </div>
+                            <div class="des-comment-product text-center show-comment">
+                                <a href="#" class="btn btn-outline-danger text-center">XEM CÁC CÂU HỎI KHÁC (37)</a>
+                            </div>
+                            <!-- des-comment-product -->
+                        </div>
+                        <!-- comment-product -->
+                    </div>
+                    <!-- col:12 -->
+                </div>
+                <!-- row -->
+            </div>
+            <!-- container -->
+        </div>
+        <!-- product-detail -->
+    </main>
+    <script>
+        $(document).ready(function () {
+            $("#comment-query-main").keyup(function (e) {
+                var val=$(this).val();
+                $(".number-cout").html(val.length);
+            });
+        });
+    </script>
+    <script src="/javascripts/roomImg.js"></script>
+<% include footer%>

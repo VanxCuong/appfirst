@@ -1,0 +1,173 @@
+<% include top %>
+    <div class="col-sm-9 col-xs-12 manager-info mt-5">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card ">
+                <div class="card-header">Thông tin cá nhân<span idu="<%= user._id%>" class="badge badge-secondary badge-pill float-right pencil-info">Chỉnh sửa</span></div>
+                  <div class="card-body fix-info-now" id="reload-info">
+                    <form action="" method="post">
+                        <div class="form-group container row">
+                          <label for="name" class="col-4 ">Họ tên:</label>
+                          <div class="col-8">
+                                <p class="pencil-info-hidden"><%= user.fullname %></p>
+                                <input type="text" name="name" id="NameInfo" value="<%= user.fullname %>" class="form-control pencil-info-show" style="display:none"  placeholder="Nhập họ tên">
+                          </div>
+                          
+                        </div>
+                        <div class="form-group container row">
+                          <label for="name" class="col-4 ">Email:</label>
+                          <div class="col-8">
+                                <p><%= user.email %></p>
+                          </div>
+                        </div>
+                        <div class="form-group container row">
+                          <label for="name" class="col-4 ">Giới tính:</label>
+                          <div class="col-8">
+                                <p class="pencil-info-hidden">
+                                    <% if(user.sex==true){ %>
+                                        Nam
+                                    <%}else{%>
+                                        Nữ
+                                        <%} %>
+                                </p>
+                                <select name="" id="SexInfo" class="pencil-info-show form-control" style="display:none">
+                                    <% if(user.sex==true){ %>
+                                        <option value="1">Nam</option>
+                                        <option value="0">Nữ</option>
+                                    <%}else{%>
+                                        <option value="0">Nữ</option>
+                                        <option value="1">Nam</option>
+                                    
+                                    <%} %>
+                                    
+                                </select>
+                          </div>
+                        </div>
+                        <div class="form-group container row">
+                          <label for="name" class="col-4 ">Sinh Nhật:</label>
+                          <div class="col-8">
+                                <p class="pencil-info-hidden"><% if(user.birthday==''){ %>
+                                    Chưa cập nhật
+                                <%}else{ %>
+                                    <%=user.birthday%>
+                                <%} %>
+                                </p>
+                                <div class="birthday-info-main  row pencil-info-show" style="display:none">
+                                    <div class="col-sm-12 col-xs-12 text-center birthday-info">
+                                        <select name="days" id="DayInfo" class="form-control">
+                                            <% var k= user.birthday.split("/"); %>
+                                            <option value="<%= k[0]%>">Ngày <%= k[0]%></option>
+                                            <% var n=0;
+                                             while(n<31){n++;
+                                             %>
+                                             <% if(n!=k[0]){%>
+                                                <option value="<%=n%>">Ngày <%=n%></option>
+                                             <%}}%>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12 col-xs-12 text-center birthday-info">
+                                        <select name="days" id="MonthInfo" class="form-control">
+                                            <option value="<%= k[1]%>">Tháng <%= k[1]%></option>
+                                            <% var n=0;
+                                             while(n<12){n++;
+                                             %>
+                                             <% if(n!=k[1]){%>
+                                                <option value="<%=n%>">Tháng <%=n%></option>
+                                             <%}}%>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12 col-xs-12 text-center birthday-info">
+                                        <select name="days" id="YearInfo" class="form-control">
+                                            <option value="<%= k[2]%>">Năm <%= k[2]%></option>
+                                            <% var n=2019;
+                                                while(n>1950){n--;
+                                            %>
+                                            <% if(n!=k[2]){%>
+                                                <option value="<%=n%>">Năm <%=n%></option>
+                                            <%}}%>
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                          </div>
+                        </div>
+                        <div class="form-group container row">
+                          <label for="name" class="col-4 ">Số CMND:</label>
+                          <div class="col-8">
+                                <p class="pencil-info-hidden"><% if(!user.id){ %>
+                                    Chưa cập nhật
+                                <%}else{ %>
+                                    <%=user.id %>
+                                <%} %></p>
+                                <input type="number" name="name" id="idInfo" value="<%=user.id %>" class="form-control pencil-info-show" style="display:none"  placeholder="Nhập họ tên">
+                          </div>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
+            <div class="col-sm-6 info-contact">
+                <div class="card ">
+                    <div class="card-header">
+                        Thông tin Liên Hệ
+                        <span idu="<%=user._id%>" class="badge badge-secondary badge-pill float-right pencil-contact">Chỉnh sửa</span>
+                    </div>
+                    <div class="card-body" id="reload-contact">
+                        <div class="form-group container row">
+                            <label for="name" class="col-4 ">Email:</label>
+                            <div class="col-8">
+                                <p class=""><%= user.email%></p>
+                            </div>
+                        </div>
+                        <div class="form-group container row">
+                            <label for="name" class="col-4 ">Địa Chỉ:</label>
+                            <div class="col-8">
+                                <p class="pencil-contact-info">
+                                    <% if(!user.address){ %>
+                                        Chưa cập nhật
+                                    <%}else{ %>
+                                        <%= user.address %>
+                                    <%} %>
+                                </p>
+                                <input type="text" name="name" id="addressInfo" value="<%= user.address %>" class="form-control pencil-contact-show" style="display:none"  placeholder="Nhập họ tên">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- card -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        Thông tin Đăng Nhập
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="post">
+                            <div class="form-group container row">
+                                <label for="name" class="col-4 ">Email:</label>
+                                <div class="col-8">
+                                    <p><%= user.email%></p>
+                                </div>
+                            </div>
+                            <div class="form-group container row">
+                                <label for="name" class="col-4 ">Mật Khẩu:</label>
+                                <div class="col-8">
+                                    <p class="pencil-user-info" >********</p>
+                                    <div class="register-password pencil-user-show" style="display:none">
+                                        <input type="password" name="passOld" id="passOld" maxlength="12" class="form-control"   placeholder="Mật khẩu cũ">
+                                        <input type="password" name="passNew" id="passNew" maxlength="12" class="form-control mt-1"   placeholder="Mật khẩu mới">
+                                        <input type="password" name="passRep" id="passRep" maxlength="12" class="form-control mt-1"   placeholder="Nhập lại mật khẩu mới">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group text-center">
+                                <p id="success-password"></p>
+                                <a href="#" idu="<%= user._id%>" class="btn btn-outline-danger btn-block pencil-user">Đổi mật khẩu</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- col-6 -->
+        </div>
+    </div>
+    <!-- managerinfo col:12 -->
+<% include bottom %>                

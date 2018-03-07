@@ -1,0 +1,74 @@
+<% include header %>
+<main class="main">
+    <div class="register">
+        <div class="col-sm-6 offset-3">
+            <div class="jumbotron">
+                <h1 class="display-3">Đăng ký tài khoản</h1>
+                <p class="lead">Những thông tin có đánh dấu <span id="require-form-edit">*</span>  là bắt buộc nhập.</p>
+                <hr class="my-2">
+
+                <form action="/register" method="post">
+                    <div class="form-group rgt-info">
+                      <input type="text" name="name" id="registerName" class="form-control"  placeholder="Họ tên đầy đủ" aria-describedby="helpId">
+                    </div>
+                    <div class="form-group rgt-info">
+                      <input type="email" name="email" id="registerEmail" title="Yêu cầu nhập đúng định dạng: xyz@gmail.com" class="form-control" maxlength="40" minlength="10" placeholder="Email đăng nhập" aria-describedby="helpId">
+                      <div class=" false-email" style="display:block" >  <span class="require-form">*</span></div>
+                    </div>
+                    <div class="form-group rgt-info">
+                      <input type="password" name="password" id="registerPass" class="form-control" maxlength="12" placeholder="Mật khẩu" aria-describedby="helpId">
+                      <div class="" style="display:block" > <span class="require-form">*</span></div>
+                    </div>
+                    <div class="form-group rgt-info">
+                      <input type="password" name="reqPassword" id="registerReqPass" class="form-control" maxlength="12" placeholder="Xác nhận mật khẩu" aria-describedby="helpId">
+                      <div class=" checkPassword" style="display:block" > <span class="require-form">*</span></div>
+                      
+                    </div>
+                    <div class="form-group rgt-info">
+                        <div class="row">
+                            <div class="col-sm-4 col-xs-4 text-center">
+                                <select name="days" id="registerDay" class="form-control">
+                                    <option value="0">Ngày</option>
+                                    <% var n=0 %>
+                                    <% while(n<31){ n++; %>
+                                        <option value="<%= n%>"><%= n%></option>
+                                    <%  }%>
+                                </select>
+                            </div>
+                            <div class="col-sm-4 col-xs-4 text-center">
+                                <select name="month" id="registerMonth" class="form-control">
+                                    <option value="0">Tháng</option>
+                                    <% var n=0 %>
+                                    <% while(n<12){ n++; %>
+                                        <option value="<%= n%>">Tháng <%= n%></option>
+                                    <%  }%>
+                                </select>
+                            </div>
+                            <div class="col-sm-4 col-xs-4 text-center">
+                                <select name="year" id="registerYear" class="form-control">
+                                    <option value="0">Năm</option>
+                                    <% var n=2019 %>
+                                    <% while(n>1950){ n--; %>
+                                        <option value="<%= n%>"><%= n%></option>
+                                    <%  }%>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group rgt-info">
+                      <label for="" id="title-sex">Giới tính:</label>
+                      <input type="radio" value="1" name="sex"> <label for=""> Nam</label>
+                      <input type="radio" value="0" name="sex"> <label for=""> Nữ</label>
+                    </div>
+                    <div class="form-group rgt-info usersuccess">
+                        <a href="#" id="User_register" class="btn btn-outline-danger btn-block">Đăng Ký</a>
+                    </div>
+                </form>
+                <!-- form -->
+            </div>
+        </div>
+    </div>
+</main>
+
+<% include footer %>

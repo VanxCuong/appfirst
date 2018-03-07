@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <title> Example </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">  
+    <link rel="shortcut icon" href="/uploads/Actions-stop-icon.png">
+    <link rel="stylesheet" href="/vendor/css/fontawesome-all.css">
+    <link rel="stylesheet" href="/owlcarousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="/owlcarousel/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/1.css"> 
+    <script type="text/javascript" src="/javascripts/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="/owlcarousel/owl.carousel.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+
+    <%
+    format=function(money){
+        money=money.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g,"$1.");
+        return money;
+    }
+    %>
+</head>
+<body >
+
+    <header class="header ">
+        <div id="top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul class="nav pull-right ulcheckss">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#form-dangnhap" data-toggle="modal">Đăng Nhập <i class="fas fa-users"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/register">Đăng Ký <i class="fas fa-address-card"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Giỏ hàng <i class="fas fa-cart-plus"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <nav class="navbar navbar-expand-lg navbar-light  ">
+                        <a class="navbar-brand" href="#">LOGO</a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                        </button>
+                    
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item active">
+                            <a class="nav-link" href="/">Trang Chủ</a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-link" href="#">Tin Tức</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="navbarDropdown">
+                                Sản phẩm
+                            </a>
+                            <div class="dropdown-menu" >
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Hướng Dẫn</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Liên Hệ</a>
+                            </li>
+                        </ul>
+                        </div>
+                    </nav>
+                </div>
+                
+            </div>
+            <!-- row -->
+        </div>
+        <!-- container -->
+ </header>
+ <!-- header -->

@@ -1,0 +1,76 @@
+<% include header %>
+<main class="main mt-3" id="gio-hang">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="back-router"><a href="/">< Tiếp tục mua hàng</a></div>
+                <div class="row">
+                    <div class="col-sm-9 col-xs-12 show-cart">
+                        <h3 class="title-cart">Giỏ hàng của tôi</h3>
+                        <p class="number-cart">100 sản phẩm</p>
+                        <div class="frames-cart">
+                            <table class="table table-striped table-bordered table-responsive-sm">
+                                <thead class="thead-light ">
+                                    <tr>
+                                        <th>Hình ảnh</th>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Số lượng</th>
+                                        <th>Giá/sản phẩm</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Hành Động</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% var sumTotal=0; %>
+                                        <% if(showCart){ %>
+                                            <% showCart.forEach(function(item){ %>
+                                                <tr>
+                                                    <td><img src="/uploads/<%= item.item.image %>" width="50" alt=""></td>
+                                                    <td><%= item.item.name %></td>
+                                                    <td>
+                                                        <select name="number-cart"  idu="<%= item.item._id %>" class="form-control ChangeQuantity">
+                                                            <option value="<%= item.soluong %>"><%= item.soluong%></option>
+                                                            <% var n=0; %>
+                                                            <% while(n<5){ n++; %>
+                                                                <% if( n!= item.soluong){ %>
+                                                                   <option value="<%=n %>"><%=n %></option>
+                                                                <% } %>
+                                                            <% } %>
+                                                        </select>
+                                                    </td>
+                                                    <td><%= format(item.item.price_new) %> VNĐ</td>
+                                                    <% var total=item.item.price_new*item.soluong ;%>
+                                                    <td><%= format(total) %> VNĐ</td>
+                                                    <td class="text-center"><a href="/cart/delete/<%= item.item._id %>" onClick="if(!confirm('Bạn muốn xóa sản phẩm này không??')){return false;}" class="btn btn-outline-danger" alt="Xóa session"><i class="far fa-trash-alt"></i></a></td>
+                                                </tr>
+                                                <% sumTotal+=total; %>
+                                            <% }) %>
+                                        <% } %>
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- col-sm-9 -->
+                    <div class="col-sm-3 col-xs-12 sum-cart">
+                        <h4 class="info-cart">Thông tin đơn hàng</h4>
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center active">
+                                Tổng Tiền:
+                                <span class="badge badge-secondary badge-pill"><%= format(sumTotal) %> VNĐ</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center ">
+                               <a href="/deliveryinformation" class="btn btn-outline-danger btn-block">Tiến hành thanh toán</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- col-sm-3 -->
+                </div>
+                <!-- row -->
+            </div>
+            <!-- col-sm-12 -->
+        </div>
+    </div>
+    <!-- container -->
+</main>
+
+ <% include footer %>
