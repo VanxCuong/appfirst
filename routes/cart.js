@@ -1,5 +1,6 @@
 var express = require('express');
 var Giohang=require("../keys/Giohang");
+var order=require("../models/order");
 var router = express.Router();
 
 /* GET users listing. */
@@ -58,6 +59,24 @@ router.post("/udi",function(req,res,next){
     res.send(true);
     
   }
-
+})
+router.post("/order",function(req,res,next){
+  var insertOrder=new order({
+    user_id:req.body.idUser,
+    product_id:req.body.idProduct,
+    quanlity:req.body.quanlity,
+    customer:req.body.customer,
+    city:req.body.city,
+    pay:req.body.pay,
+    phone:req.body.phone,
+    addressorder:req.body.addressorder
+  })
+  insertOrder.save(function(err,result){
+    if(err){
+      res.send(false)
+    }else{
+      res.send(true);
+    }
+  })
 })
 module.exports = router;

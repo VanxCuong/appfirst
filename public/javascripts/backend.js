@@ -18,6 +18,7 @@ $(document).ready(function () {
  * check THANH TOÁN
  * link:http://localhost:3000/deliveryinformation
  */
+var moneyShip=20000;
 var arrCartId=[];
 var successStepone=`<a href="" class="btn btn-primary btn-block disabled"> <i class="fab fa-angellist"></i> Đăng nhập hoàn tất.</a>
 <a href="" class="mt-3 btn btn-outline-success successStepOne">Chuyển Sang Bước 2.</a>`;
@@ -132,7 +133,6 @@ var codeSteptwo=function(res){
                         <tbody>
                             ${ Carthtml=""}
                             ${$.map(res.items, function (elementOrValue, indexOrKey) {
-                                arrCartId.push(elementOrValue.item._id);
                                 Carthtml+=`<tr>
                                 <td><img src="/uploads/${elementOrValue.item.image}" width="50" alt=""></td>
                                 <td>${processString(elementOrValue.item.name)}</td>
@@ -166,7 +166,8 @@ var codeSteptwo=function(res){
 <a href="#" class="btn btn-outline-danger successStepTwo text-center" display"margin:auto">Xác nhận đơn hàng</a>
 `
 }        
-
+var Sumtotal=0;
+var SumProduct=0;
 var codeStepThree=function(res){
     return `<div class="back-out">
     <div class="img-back-out">
@@ -186,21 +187,22 @@ var codeStepThree=function(res){
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><img src="/images/4fa20ace-a93b-0001-7f92-00135c4b8f89.jpg" width="50" alt=""></td>
-                    <td>Giày thể thao</td>
+                ${Carthtml=""}
+                
+                ${$.map(res.items, function (elementOrValue, indexOrKey) {
+                    Carthtml+=`<tr>
+                    <td><img src="/uploads/${elementOrValue.item.image}" width="50" alt=""></td>
+                    <td>${processString(elementOrValue.item.name)}</td>
                     <td>
-                        <select name="number-cart" class="form-control">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
+                        ${elementOrValue.soluong}
                     </td>
-                    <td>300.000 VNĐ</td>
-                    <td>300.000 VNĐ</td>
-                </tr>
+                    <td>${format(elementOrValue.item.price_new)} VNĐ</td>
+                    <td>${format(elementOrValue.item.price_new*elementOrValue.soluong)} VNĐ</td>
+                    </tr>`
+                    Sumtotal+=elementOrValue.item.price_new*elementOrValue.soluong;
+                    SumProduct++;
+                })}
+                ${ Carthtml }
             </tbody>
         </table>
         <div class="deliveryinfomation-sale">
@@ -218,11 +220,11 @@ var codeStepThree=function(res){
             <table class="table table-bordered table-responsive-sm">
                     <tr>
                         <th>Thành Tiền</th>
-                        <td>300.000 VNĐ</td>
+                        <td>${ format(Sumtotal)} VNĐ</td>
                     </tr>
                     <tr>
                         <th>Phí vận chuyển</th>
-                        <td>20.000 VNĐ</td>
+                        <td>${ format(SumProduct*moneyShip)} VNĐ</td>
                     </tr>
                     <tr>
                         <th>Thuế</th>
@@ -234,7 +236,7 @@ var codeStepThree=function(res){
                     </tr>
                     <tr>
                         <th class="text-center" style="font-size:20px">Tổng Chi Phí</th>
-                        <th class="price-main" style="font-weight:bold;font-size:20px">320.000 VNĐ</th>
+                        <th class="price-main" style="font-weight:bold;font-size:20px">${ format(SumProduct*moneyShip+Sumtotal)} VNĐ</th>
                     </tr>
             </table>
         </div>
@@ -272,7 +274,6 @@ function checkRegisterOrder(){
                 $(".successStepOne").before("<p class='text-center bg-checked mt-3'>Bạn chưa có sản phẩm nào để thanh toán.</p>");
             }
         })
-        
         return false;
     });
     // CLick xong bước 2
@@ -293,7 +294,6 @@ function checkRegisterOrder(){
             console.log(dl);
             var url="/cart/udi";
             configAjax(url,dl,function(response){
-                console.log(response);
                 $.each(response, function (i, v) {
                     if(v.param=="name"){
                         $("#checkname").html(v.msg);
@@ -312,8 +312,15 @@ function checkRegisterOrder(){
                     }
                 });
                 if(response==true){
-                    editItf(".successStepTwo","#steptwo","#stepthree","#checkout");
-                    $("#checkout").html(codeStepThree("hihi"));
+                    var url="/cart/checkcart";
+                    configGetAjax(url,function(response){
+                        if(response){
+                            editItf(".successStepTwo","#steptwo","#stepthree","#checkout");
+                            $("#checkout").html(codeStepThree(response));
+                        }
+                        
+                    })
+                    
                 }
             })
         }else{
@@ -323,8 +330,37 @@ function checkRegisterOrder(){
     });
     // CLick Xong bước 3
     $(document).on('click','#deliveryInfomation .successStepThree', function () {
-        editItf(".successStepThree","#stepthree","#stepfour","#success");
-        $("#success").html(codeStepFour("hihi"));
+        
+        var CheckQuanLiTyProduct=0;
+        console.log(idUser);
+        
+        var url="/cart/checkcart"
+        configGetAjax(url,function(response){
+            $.each(response.items, function (indexInArray, valueOfElement) { 
+                CheckQuanLiTyProduct++;
+                var dl={
+                    idUser:idUser,
+                    idProduct:indexInArray,
+                    quanlity:valueOfElement.soluong,
+                    customer:valueOfElement.name,
+                    city:valueOfElement.city,
+                    pay:valueOfElement.methodPay,
+                    phone:valueOfElement.phone,
+                    addressorder:valueOfElement.addressorder
+                }
+                var url="/cart/order"
+                setTimeout(() => {
+                    configAjax(url,dl,function(response){
+                        if(CheckQuanLiTyProduct==valueOfElement.soluong){
+                            editItf(".successStepThree","#stepthree","#stepfour","#success");
+                            $("#success").html(codeStepFour(response));
+                        }
+                    })
+                }, 100);
+            });
+        })
+        
+        
         return false;
     });
 
@@ -726,12 +762,14 @@ function Dangnhap(){
 /**
  * check xem đã đăng nhập chưa
  */
+var idUser;
 function checkSesssion(){
     $.ajax({
         type: "get",
         url: "/session",
         success: function (response) {
             if(response){
+                idUser=response._id;
                 navHeader=`
                     <li class="nav-item"><a class="nav-link " href="/users/order">Kiểm tra đơn hàng</a></li>
                     <li class="nav-item dropdown">

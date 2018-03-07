@@ -38,6 +38,7 @@ function Giohang(oldCart){
             this.items[item].phone=phone;
             this.items[item].methodPay=methodPay;
         }
+        
     }
 }
 module.exports=Giohang;
