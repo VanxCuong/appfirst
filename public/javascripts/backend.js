@@ -20,6 +20,11 @@ $(document).ready(function () {
  */
 var moneyShip=20000;
 var arrCartId=[];
+var txtCustomer="",
+    txtPhone="",
+    txtCity="",
+    txtAddressorder="";
+    txtMethodPay="";
 var successStepone=`<a href="" class="btn btn-primary btn-block disabled"> <i class="fab fa-angellist"></i> Đăng nhập hoàn tất.</a>
 <a href="" class="mt-3 btn btn-outline-success successStepOne">Chuyển Sang Bước 2.</a>`;
 var huload=`<div class="huload mt-3" display="margin:auto" >
@@ -28,7 +33,7 @@ var huload=`<div class="huload mt-3" display="margin:auto" >
 var codeSteptwo=function(res){
     return `<div class="back-out">
 <div class="img-back-out">
-    <a href="">Quay lại Bước 1</a>
+    <a href="#" class="backouthome">Quay lại Bước 1</a>
 </div>
 </div>
 <div class="row mt-3" id="steptwofalse">
@@ -42,7 +47,7 @@ var codeSteptwo=function(res){
                         <div class="form-group rgt-info row">
                             <label for="name" class="col-6 col-form-label text-right text-right">Tên</label>
                             <div class="col-6">
-                                <input class="form-control" name="name" id="customer" type="text" placeholder="Họ & tên">
+                                <input class="form-control" name="name" id="customer" type="text" value="${txtCustomer}"  placeholder="Họ & tên">
                                 <div class="checkUser false-email" style="display:block" > <span class="require-form">*</span></div>
                                 <small id="checkname" class="text-muted reNull"></small>
                             </div>
@@ -52,8 +57,8 @@ var codeSteptwo=function(res){
                             <div class="col-6">
                                     <select name="addressCity" id="addressCity" class="form-control">
                                         <option value="">Lựa chọn</option>
-                                        <option value="Hồ Chí Minh">Hồ Chí minh</option>
-                                        <option value="Hà Nội">Hà Nội</option>
+                                        <option value="0">Hồ Chí minh</option>
+                                        <option value="1">Hà Nội</option>
                                     </select>
                                     <small id="checkadCity" class="text-muted reNull"></small>
                                     <!-- <div class="checkUser false-email" style="display:block" > <span class="require-form">*</span></div> -->
@@ -62,7 +67,7 @@ var codeSteptwo=function(res){
                         <div class="form-group rgt-info row">
                             <label for="address-info" class="col-6 col-form-label text-right">Địa chỉ nhận hàng</label>
                             <div class="col-6">
-                                <textarea class="form-control" placeholder="Địa chỉ nhận hàng (Tầng,số nhà,đường,xã,huyện)" id="addressorder" name="addressorder" id="address-info"></textarea>
+                                <textarea class="form-control" value="${txtAddressorder}" placeholder="Địa chỉ nhận hàng (Tầng,số nhà,đường,xã,huyện)" id="addressorder" name="addressorder" id="address-info"></textarea>
                                 <div class="checkUser false-email" style="display:block" > <span class="require-form">*</span></div>
                                 <small id="checkadOrder" class="text-muted reNull"></small>
                             </div>
@@ -70,7 +75,7 @@ var codeSteptwo=function(res){
                         <div class="form-group rgt-info row">
                             <label for="phoneNumber" class="col-6 col-form-label text-right">Điện thoại di động</label>
                             <div class="col-6">
-                                    <input type="number" name="phone" id="phoneNumber" class="form-control" maxlength="12" placeholder="Số điện thoại"  aria-describedby="helpId">
+                                    <input type="number" value="${txtPhone}" name="phone" id="phoneNumber" class="form-control" maxlength="12" placeholder="Số điện thoại"  aria-describedby="helpId">
                                     <div class="checkUser false-email" style="display:block" > <span class="require-form">*</span></div>
                                     <small id="checkphone" class="text-muted reNull"></small>
                             </div>
@@ -93,13 +98,13 @@ var codeSteptwo=function(res){
                     <div class="col-sm-12">
                         <div class="form-check">
                             <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="select-price"  value="Thanh toán khi nhận hàng" >
+                            <input type="radio" class="form-check-input" name="select-price"  value="0" >
                             Thanh toán khi nhận hàng
                         </label>
                         </div>
                         <div class="form-check">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="select-price"  value="Chuyển khoản ngân hàng" >
+                                <input type="radio" class="form-check-input" name="select-price"  value="1" >
                                 Chuyển khoản ngân hàng
                             </label>
                         </div>
@@ -133,11 +138,13 @@ var codeSteptwo=function(res){
                         <tbody>
                             ${ Carthtml=""}
                             ${$.map(res.items, function (elementOrValue, indexOrKey) {
+                                
                                 Carthtml+=`<tr>
                                 <td><img src="/uploads/${elementOrValue.item.image}" width="50" alt=""></td>
                                 <td>${processString(elementOrValue.item.name)}</td>
                                 <td>
                                     ${elementOrValue.soluong}
+                                    
                                 </td>
                                 <td>${format(elementOrValue.item.price_new)} VNĐ</td>
                                 <td>${format(elementOrValue.item.price_new*elementOrValue.soluong)} VNĐ</td>
@@ -171,7 +178,7 @@ var SumProduct=0;
 var codeStepThree=function(res){
     return `<div class="back-out">
     <div class="img-back-out">
-        <a href="">Quay lại Bước 2</a>
+        <a href="" class="backOutStepTwo">Quay lại Bước 2</a>
     </div>
     </div>
     <div class="row">
@@ -188,8 +195,12 @@ var codeStepThree=function(res){
             </thead>
             <tbody>
                 ${Carthtml=""}
-                
                 ${$.map(res.items, function (elementOrValue, indexOrKey) {
+                    txtCustomer=elementOrValue.name;
+                    txtAddressorder=elementOrValue.name;
+                    txtCity=elementOrValue.name;
+                    txtPhone=elementOrValue.name;
+                    txtMethodPay=elementOrValue.methodPay;
                     Carthtml+=`<tr>
                     <td><img src="/uploads/${elementOrValue.item.image}" width="50" alt=""></td>
                     <td>${processString(elementOrValue.item.name)}</td>
@@ -291,6 +302,12 @@ function checkRegisterOrder(){
                 addresscity:$("#addressCity").val(),
                 methodPay:selectPrice[0]
             }
+            txtAddressorder=dl.addressorder;
+            txtCity=dl.addresscity;
+            txtPhone=dl.phone;
+            txtCustomer=dl.name;
+            console.log(txtCustomer);
+            
             console.log(dl);
             var url="/cart/udi";
             configAjax(url,dl,function(response){
@@ -370,6 +387,20 @@ function checkRegisterOrder(){
         
         $(".reNull").val("");
     });
+    /**
+     * Xử lý nút quay lại 1.
+     */
+    $(document).on('click',".backouthome", function () {
+        backout(".backouthome","#steptwo",'#stepone','#home');
+        return false;
+    });
+    /**
+     * Xử lý nút quay lại 2.
+     */
+    $(document).on('click',".backOutStepTwo", function () {
+        backout(".backOutStepTwo","#stepthree",'#steptwo','#addCart');
+        return false;
+    });
 }
 /**
  * Logic Các Bước Đặt hàng:
@@ -397,7 +428,22 @@ function editItf(click,a,b,c){
         $(".huload").remove();
     }, 1000);
 }
-
+function backout(click,a,b,c){
+    $(click).parent().parent().after(huload);
+    $(a).addClass("disabled");
+    $(a).removeClass("active");
+    $(a).removeClass("show");
+    $(b).removeClass("disabled");
+    $(b).addClass("active");
+    $(b).addClass("show");
+    setTimeout(() => {
+        $(click).parent().parent().parent().removeClass("active");
+        $(click).parent().parent().parent().removeClass("show");
+        $(c).addClass("active");
+        $(c).addClass("show");
+        $(".huload").remove();
+    }, 1000);
+}
 /**
  * THay đổi số lượng giỏ hàng.
  */
