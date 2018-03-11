@@ -3,6 +3,8 @@ var multer=require("multer");
 var category=require("../models/category");
 var product=require("../models/product");
 var tollbar=require("../models/admintollbar");
+var order=require("../models/order");
+var comments=require("../models/comments");
 var router = express.Router();
 
 var storage = multer.diskStorage({
@@ -236,7 +238,10 @@ router.post("/search",function(req,res,next){
  * Kết thúc Xử lý Quản lý Sản Phẩm
  */
 router.get('/managerOrder', function(req, res, next) {
-  res.render('./admin/manager-order', { title: 'Express' });
+  order.find({status:0}).populate("product_id").populate("user_id").exec(function (err,result) {
+    res.render('./admin/manager-order', { order:result });
+  })
+  
 });
 router.get('/ordersuccess', function(req, res, next) {
   res.render('./admin/order-success', { title: 'Express' });
@@ -244,9 +249,43 @@ router.get('/ordersuccess', function(req, res, next) {
 router.get('/managerusers', function(req, res, next) {
   res.render('./admin/manager-users', { title: 'Express' });
 });
+/**
+ * Xử lý phần bình luận
+ */
 router.get('/managercomments', function(req, res, next) {
-  res.render('./admin/manager-comments', { title: 'Express' });
+  comments.find({status:0}).sort({_id:1}).limit(20).skip(0).populate("product_id").populate("user_id").exec(function (err,result) {  
+    res.render('./admin/manager-comments', { title: 'Express',comments:result, qttCmt:result.length });
+  })
 });
+router.get('/acceptsCmt/:id', function(req, res, next) {
+  var id=req.params.id;
+  console.log(id);
+  dl={
+    status:"1",
+  }
+  comments.update({_id:id},dl,function (err,result) {  
+    if(result){
+      res.send(true);
+    }
+  })
+});
+router.get('/DeleteALL', function(req, res, next) {
+  comments.deleteMany({status:0},function (err,result) {  
+    if(result){
+      res.send(true);
+    }
+  })
+});
+router.get('/AcceptALL', function(req, res, next) {
+  comments.updateMany({},{status:1},function (err,result) {  
+    if(result){
+      res.send(true);
+    }
+  })
+});
+/**
+ * Kết thúc Xử lý phần bình luận
+ */
 router.get('/profit', function(req, res, next) {
   res.render('./admin/profit', { title: 'Express' });
 });

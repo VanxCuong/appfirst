@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 const schema=new Schema({
     content:{type:String,trim:true},
     product_id:{type: Schema.Types.ObjectId, ref: 'Product' },
+    link:{type:String,required:true},
     user_id:{type: Schema.Types.ObjectId, ref: 'User' },
     status:{type:Boolean,default:0},
     create_at:{type:Date,default:Date.now}

@@ -6,7 +6,44 @@ $(document).ready(function () {
     ShowSortDecrease();
     ShowSortIncrease();
     showTollbar();
+    AcceptCmt();
 });
+/**
+ * Xử Lý Phần Bình Luận
+ */
+function AcceptCmt(){
+    // Chấp nhận bình luận
+    xulybinhluan(".manager-comments #AcceptCmt",function(id){
+        return "/admin/acceptsCmt/"+id;
+    });
+    // Xóa cmt
+    xulybinhluan(".manager-comments #deleteCmt",function(id){
+        return "/admin/deleteCmt/"+id;
+    });
+    // Xóa tất cả bình luận
+    xulybinhluan(".manager-comments #DeleteALL",function(id){
+        return "/admin/DeleteALL/";
+    });
+    // Thêm tất cả bình luận
+    xulybinhluan(".manager-comments #AcceptALL",function(id){
+        return "/admin/AcceptALL/";
+    });
+}
+var xulybinhluan=function(a,cb){
+    $(document).on('click',a, function () {
+        var id=$(this).attr("idu");
+        url=cb(id);
+        if(confirm("Bạn có đồng ý không ?")){
+            configGetAjax(url,function(response){
+                if(response==true){
+                    $('#reloads').load(location.href + " #reloads>*");
+                }
+            })
+        }
+        return false;
+    });
+    
+}
 /**
  * Amount: Số lượng sản phẩm mặc định tại http://localhost:3000/admin/managerProduct
  */
@@ -44,7 +81,13 @@ function configAjax(url,data,cb){
         success: cb
     });
 }
-
+function configGetAjax(url,cb){
+    $.ajax({
+        type: "get",
+        url: url,
+        success: cb
+    });
+}
 /**
  * Click Show Product
  */

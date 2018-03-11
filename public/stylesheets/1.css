@@ -3,6 +3,32 @@
     padding: 0;
 }
 
+ul.navbar-nav.mr-auto {
+    position: relative;
+    z-index: 1;
+}
+
+.user-comment {
+}
+
+p#comment-null {
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+p.success-comment {
+    font-size: 14px;
+    color: #dc3545;
+}
+
+.manager-order th ,.manager-comments th {
+    min-width: 84px !important;
+    color: #000 !important;
+    background: #aeaeb5 !important;
+    padding: 10px !important;
+}
+
 .reNull {
     color: red !important;
     font-size: 11px;
@@ -52,6 +78,7 @@ p#success-password {
     margin: auto;
     padding-left: 32px;
     text-align: right;
+    z-index: 2;
 }
 
 
@@ -89,14 +116,14 @@ p#success-password {
     font-size: 14px;
 }
 
-.manager-product .jumbotron.bg-white.btn-block,.manager-order .jumbotron.bg-white.btn-block {
+.manager-product .jumbotron.bg-white.btn-block, .manager-order .jumbotron.bg-white.btn-block,.manager-comments .jumbotron.bg-white.btn-block {
     padding: 15px 0;
     background: #aeaeb5 !important;
     text-align: center;
     margin: 0;
 }
 
-.manager-product .jumbotron.bg-white.btn-block h1,.manager-order .jumbotron.bg-white.btn-block h1 {
+.manager-product .jumbotron.bg-white.btn-block h1, .manager-order .jumbotron.bg-white.btn-block h1,.manager-comments .jumbotron.bg-white.btn-block h1 {
     font-size: 45px;
     font-family: initial;
     text-transform: uppercase;
@@ -350,7 +377,17 @@ a:hover {
 }
 
 .des-comment-product {
-    min-height: 116px;
+    position: relative;
+    border: 1px solid #b3a5a5;
+    min-height: 93px;
+}
+
+.des-comment-product:nth-child(n+1) {
+    border-bottom: none;
+}
+
+.des-comment-product:last-child {
+    border-bottom: 1px solid #b3a5a5;
 }
 
 .des-comment-product .user-comment .img-user {
@@ -362,16 +399,17 @@ a:hover {
     color: #3a5ab8;
     font-weight: bold;
     font-family: -webkit-pictograph;
-    position: relative;
-    top: -10px;
-    left: 17px;
+    position: absolute;
+    left: 6%;
+    top: 6%;
 }
 
 .des-comment-product .user-comment .des-comment {
-    float: right;
     font-size: 14px;
-    border: 1px solid #d4d4d4;
-    padding: 10px;
+    position: absolute;
+    left: 6%;
+    top: 48%;
+    color: #000c;
 }
 .large{
 	width: 175px;

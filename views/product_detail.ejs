@@ -84,6 +84,7 @@
                                                     <div id="profile1" class="tab-pane fade active show">
                                                         <%- productShow.description_detail%>
                                                     </div>
+                                                    
                                                     <!-- #profile1 -->
                                                     <div id="messages1" class="tab-pane fade">
                                                         <form action="" method="post">
@@ -173,7 +174,7 @@
                             <div class="col-sm-3">
                                 <div class="frames-new-product">
                                     <h4 class="new-product-title">Mới Nhất</h4>
-                                    <%productNew.forEach(function(item){ %>
+                                    <% productNew.forEach(function(item) { %>
                                         <div class="media mt-3">
                                             <a class="d-flex align-self-bottom" href="/show/<%= item.link %>">
                                                 <img src="/uploads/<%= item.image %>" class="" alt="">
@@ -185,7 +186,7 @@
                                         </div>
                                         <!-- media -->
                                         <hr>
-                                    <%}) %>
+                                    <%}); %>
                                     <% function processString(gt){
                                             var k=gt.slice(15);
                                                 if(k){
@@ -194,59 +195,21 @@
                                                     gt=gt.slice(0,14);
                                                 }
                                             return gt;
-                                        } ;%>
+                                        };%>
                                     
                                 </div>
                             </div>
                         </div>
                         <hr>
-                        <div class="comment-product">
-                            <h3 class="title-comment-product">Các câu hỏi về sản phẩm này</h3>
-                            <p style="display:none">Vui lòng <span><a  href="#form-dangnhap" data-toggle="modal">Đăng Nhập </a></span> hoặc <span> <a href="/register">Đăng ký</a></span> ngay! để đặt câu hỏi cho nhà bán hàng</p>
-                            <div class="comment-query">
-                                <div class="frames-query">
-                                    <textarea name="" class="comment-query-main" maxlength="300" id="comment-query-main"  placeholder="Ví dụ: Chất liệu sản phẩm là gì ?"></textarea>
-                                    <a href="#" class="submit-comment btn btn-danger">Đặt Câu Hỏi</a>
-                                    <div class="number-max"><span class="number-cout">0</span>/300</div>
-                                </div>
+                        <div class="comment-product" idProduct="<%= productShow._id%>" linkProduct="<%= productShow.link%>">
+                            <h3 class="title-comment-product">Bình luận về sản phẩm này</h3>
+                            <p class="pageFixcmt">Vui lòng <span><a  href="#form-dangnhap" data-toggle="modal">Đăng Nhập </a></span> hoặc <span> <a href="/register">Đăng ký</a></span> ngay! để đặt câu hỏi cho nhà bán hàng</p>
+                            <div id="frames-comment" class="mt-3">
+                                
                             </div>
-                            <div class="des-comment-product">
-                                <div class="user-comment">
-                                    <span class="img-user">
-                                        <i class="fas fa-user-circle"></i>
-                                    </span>
-                                    <span class="name-user">
-                                        Trần Văn Cương
-                                    </span>
-                                    <div class="des-comment">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus possimus atque iusto sed dolor accusamus nihil illo, doloribus quae enim officia necessitatibus magni quasi beatae ullam qui quam! Maiores, rem!</div>
-                                </div>
-                            </div>
-                            <!-- des-comment-product -->
-                            <div class="des-comment-product">
-                                <div class="user-comment">
-                                    <span class="img-user">
-                                        <i class="fas fa-user-circle"></i>
-                                    </span>
-                                    <span class="name-user">
-                                        Trần Văn Cương
-                                    </span>
-                                    <div class="des-comment">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus possimus atque iusto sed dolor accusamus nihil illo, doloribus quae enim officia necessitatibus magni quasi beatae ullam qui quam! Maiores, rem!</div>
-                                </div>
-                            </div>
-                            <!-- des-comment-product -->
-                            <div class="des-comment-product">
-                                <div class="user-comment">
-                                    <span class="img-user">
-                                        <i class="fas fa-user-circle"></i>
-                                    </span>
-                                    <span class="name-user">
-                                        Trần Văn Cương
-                                    </span>
-                                    <div class="des-comment">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus possimus atque iusto sed dolor accusamus nihil illo, doloribus quae enim officia necessitatibus magni quasi beatae ullam qui quam! Maiores, rem!</div>
-                                </div>
-                            </div>
-                            <div class="des-comment-product text-center show-comment">
-                                <a href="#" class="btn btn-outline-danger text-center">XEM CÁC CÂU HỎI KHÁC (37)</a>
+                            <!-- frames-comment -->
+                            <div class=" text-center show-comment mt-3">
+                                
                             </div>
                             <!-- des-comment-product -->
                         </div>
@@ -260,13 +223,5 @@
         </div>
         <!-- product-detail -->
     </main>
-    <script>
-        $(document).ready(function () {
-            $("#comment-query-main").keyup(function (e) {
-                var val=$(this).val();
-                $(".number-cout").html(val.length);
-            });
-        });
-    </script>
     <script src="/javascripts/roomImg.js"></script>
 <% include footer%>

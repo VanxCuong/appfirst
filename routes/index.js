@@ -2,6 +2,7 @@ var express = require('express');
 // var passport=require("../keys/passportjs");
 var product=require("../models/product");
 var category=require("../models/category");
+var comments=require("../models/comments");
 var stringToDom = require('string-to-dom');
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
@@ -90,5 +91,35 @@ router.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });
-
+router.post('/cmt/add', function(req, res){
+    var dl=new comments({
+      content:req.body.content,
+      product_id:req.body.product_id,
+      user_id:req.body.user_id,
+      link:req.body.link
+    })
+    dl.save(function (err,result) {
+      res.send(true);
+    })
+});
+/**
+ * Xử lý phần comments
+ */
+router.get('/cmt/select/:link', function(req, res){
+  link=req.params.link;
+  comments.find({status:1,link:link}).skip(0).sort({_id:-1}).limit(7).populate("user_id").exec(function(err,result) {
+    if(result){
+      res.send(result);
+    }
+  })
+});
+router.get('/cmt/selectall/:quantity', function(req, res){
+  var quantity=req.params.quantity;
+  console.log(quantity);
+  comments.find({status:1,link:link}).skip(Number(quantity)).sort({_id:-1}).populate("user_id").exec(function(err,result) {
+    if(result){
+      res.send(result);
+    }
+  })
+});
 module.exports = router;

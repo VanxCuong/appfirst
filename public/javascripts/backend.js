@@ -12,25 +12,208 @@ $(document).ready(function () {
     MyReturn();
     changeQuantityCart();
     checkRegisterOrder();
+    ShowComment();
 });
-
+/**
+ * Xử lý phần bình luận comment
+ */
+var pageCmt=`<div class="comment-query">
+<div class="frames-query">
+    <textarea name="" class="comment-query-main" maxlength="300" id="comment-query-main"  placeholder="Ví dụ: Chất liệu sản phẩm là gì ?"></textarea>
+    <p class="success-comment" style="display:none"></p>
+    <a href="#" class="submit-comment btn btn-danger">Đặt Câu Hỏi </a>
+    <div class="number-max"><span class="number-cout">0</span>/300</div>
+</div>
+</div>`
+var quantityCmt=7;
+var showCmt=`<a href="#" class="btnShowBL btn btn-outline-danger text-center" quantityCmt="${quantityCmt}">XEM TẤT CẢ BÌNH LUẬN</a>`
+var loadCmt=function (res) {
+    var a="",dem=0;
+    
+    $.each(res, function (indexInArray, valueOfElement) { 
+        a+=`<div class="des-comment-product">
+            <div class="user-comment">
+                <span class="img-user">
+                    <i class="fas fa-user-circle"></i>
+                </span>
+                <span class="name-user">
+                    ${valueOfElement.user_id.fullname}
+                </span>
+                <div class="des-comment">  ${valueOfElement.content}</div>
+            </div>
+        </div>`
+        dem++;
+    });
+    if(dem==0){
+        a=`<p id="comment-null" class="mt-4">Chưa có bình luận nào.</p>`;
+    }
+    return a;
+}
+function ShowComment(){
+    url="/session";
+    /**
+     * Xem User đăng nhập chưa
+     * Nếu đăng nhập rồi thì hiện khung bình luận
+     */
+    configGetAjax(url,function (response) {
+        if(response){
+            $(".pageFixcmt").remove();
+            $(".comment-product .title-comment-product").after(pageCmt);
+        }
+    })
+    /**
+     * Xử lý gửi bình luận
+     */
+    $(document).on('click','.submit-comment', function () {
+        $(this).html('Đặt câu hỏi <span id="hu-loadNow"><img src="/images/load.gif" alt="" width="50" ></span>');
+        var bl=$("#comment-query-main").val();
+        var product=$(".comment-product").attr("idproduct");
+        var link=$(".comment-product").attr("linkProduct");
+        url="/cmt/add";
+        data={
+            content:bl,
+            user_id:idUser,
+            product_id:product,
+            link:link
+        } 
+        if(bl==""){
+            $(".success-comment").html('Câu hỏi quá ngắn!!').show();
+            $(this).html('Đặt câu hỏi');
+        }else{
+            setTimeout(() => {
+                configAjax(url,data,function (response) {
+                    if(response==true){
+                        $("#hu-loadNow").remove();
+                        $(".success-comment").html("Đặt Câu Hỏi thành công. Vui lòng đời xét duyệt").show();
+                    }
+                })
+                
+            }, 200);
+        }
+        $("#comment-query-main").val("")
+        return false;
+    });
+    /**
+     * Load Hàng Loạt Bình Luận
+     */
+    
+    var pstCmt=location.pathname.split("/");
+    var loadbl="/cmt/select/"+pstCmt[2];
+    if(pstCmt[1]=="show"){
+        configGetAjax(loadbl,function (res) {
+            if(res){
+                console.log("hihi");
+                console.log(res);
+                
+                $("#frames-comment").html(loadCmt(res));
+                if(res.length>=7){
+                    $(".show-comment").html(showCmt);
+                }
+            }
+        })
+    }
+    /**
+     * click xem thêm comment
+     */
+    $(document).on('click','.btnShowBL', function () {
+        var url= "/cmt/selectall/"+quantityCmt;
+        configGetAjax(url,function(res) {
+            $("#frames-comment").append(loadCmt(res));
+            // ẩn nút xem tất cả bình luận
+            quantityCmt+=res.length;
+            $(".btnShowBL").remove();
+        })
+        return false;
+    });
+}
 /**
  * check THANH TOÁN
  * link:http://localhost:3000/deliveryinformation
  */
 var moneyShip=20000;
 var arrCartId=[];
-var txtCustomer="",
-    txtPhone="",
-    txtCity="",
-    txtAddressorder="";
-    txtMethodPay="";
+var createDataOrder=[{
+    txtCustomer:"",
+    txtPhone:"",
+    txtCity:"",
+    txtAddressorder:"",
+    txtMethodPay:""
+}]
+    
 var successStepone=`<a href="" class="btn btn-primary btn-block disabled"> <i class="fab fa-angellist"></i> Đăng nhập hoàn tất.</a>
 <a href="" class="mt-3 btn btn-outline-success successStepOne">Chuyển Sang Bước 2.</a>`;
 var huload=`<div class="huload mt-3" display="margin:auto" >
 <img src="/images/o2mtzbxKtid.gif" alt="" style="position: relative;left: 50%;transform: translateX(-50%);">
 </div>`
 var codeSteptwo=function(res){
+    var cityname="";
+    var methodPay="";
+    var Carthtml="";
+    /**
+     * Xử Lý phương thức thanh toán
+     */
+    if(createDataOrder[0].txtMethodPay=="0"){
+        methodPay=`<div class="form-check">
+        <label class="form-check-label">
+            <input type="radio" class="form-check-input" name="select-price"  value="0" checked >
+            Thanh toán khi nhận hàng
+        </label>
+        </div>
+        <div class="form-check">
+            <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="select-price"  value="1" >
+                Chuyển khoản ngân hàng
+            </label>
+        </div>`
+    }else if(createDataOrder[0].txtMethodPay=="1"){
+        methodPay=`<div class="form-check">
+        <label class="form-check-label">
+            <input type="radio" class="form-check-input" name="select-price"  value="0" >
+            Thanh toán khi nhận hàng
+        </label>
+        </div>
+        <div class="form-check">
+            <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="select-price"  value="1" checked >
+                Chuyển khoản ngân hàng
+            </label>
+        </div>`
+    }else{
+        methodPay=`<div class="form-check">
+        <label class="form-check-label">
+            <input type="radio" class="form-check-input" name="select-price"  value="0"  >
+            Thanh toán khi nhận hàng
+        </label>
+        </div>
+        <div class="form-check">
+            <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="select-price"  value="1" >
+                Chuyển khoản ngân hàng
+            </label>
+        </div>`
+    }
+    /** Xử lý tỉnh thành */
+    if(createDataOrder[0].txtCity=="0"){
+        cityname=`
+            <option value="0">Hồ Chí minh</option>
+            <option value="1">Hà Nội</option>
+        `
+    }else if(createDataOrder[0].txtCity=="1"){
+        cityname=`
+            <option value="1">Hà Nội</option>
+            <option value="0">Hồ Chí minh</option>
+        `
+    }else{
+        cityname=`
+            <option value="">Lựa chọn</option>
+            <option value="0">Hồ Chí minh</option>
+            <option value="1">Hà Nội</option>
+        `
+    }
+    /** Xử lý in sản phẩm */
+    Carthtml=shopCartOder(res,function(a,b) {
+        console.log(a+b);
+      });
     return `<div class="back-out">
 <div class="img-back-out">
     <a href="#" class="backouthome">Quay lại Bước 1</a>
@@ -47,7 +230,7 @@ var codeSteptwo=function(res){
                         <div class="form-group rgt-info row">
                             <label for="name" class="col-6 col-form-label text-right text-right">Tên</label>
                             <div class="col-6">
-                                <input class="form-control" name="name" id="customer" type="text" value="${txtCustomer}"  placeholder="Họ & tên">
+                                <input class="form-control" name="name" id="customer" type="text" value="${createDataOrder[0].txtCustomer}"  placeholder="Họ & tên">
                                 <div class="checkUser false-email" style="display:block" > <span class="require-form">*</span></div>
                                 <small id="checkname" class="text-muted reNull"></small>
                             </div>
@@ -56,9 +239,7 @@ var codeSteptwo=function(res){
                             <label for="addressCity" class="col-6 col-form-label text-right">Tỉnh/thành phố</label>
                             <div class="col-6">
                                     <select name="addressCity" id="addressCity" class="form-control">
-                                        <option value="">Lựa chọn</option>
-                                        <option value="0">Hồ Chí minh</option>
-                                        <option value="1">Hà Nội</option>
+                                        ${cityname}
                                     </select>
                                     <small id="checkadCity" class="text-muted reNull"></small>
                                     <!-- <div class="checkUser false-email" style="display:block" > <span class="require-form">*</span></div> -->
@@ -67,7 +248,7 @@ var codeSteptwo=function(res){
                         <div class="form-group rgt-info row">
                             <label for="address-info" class="col-6 col-form-label text-right">Địa chỉ nhận hàng</label>
                             <div class="col-6">
-                                <textarea class="form-control" value="${txtAddressorder}" placeholder="Địa chỉ nhận hàng (Tầng,số nhà,đường,xã,huyện)" id="addressorder" name="addressorder" id="address-info"></textarea>
+                                <textarea class="form-control"  placeholder="Địa chỉ nhận hàng (Tầng,số nhà,đường,xã,huyện)" id="addressorder" name="addressorder" id="address-info">${createDataOrder[0].txtAddressorder}</textarea>
                                 <div class="checkUser false-email" style="display:block" > <span class="require-form">*</span></div>
                                 <small id="checkadOrder" class="text-muted reNull"></small>
                             </div>
@@ -75,7 +256,7 @@ var codeSteptwo=function(res){
                         <div class="form-group rgt-info row">
                             <label for="phoneNumber" class="col-6 col-form-label text-right">Điện thoại di động</label>
                             <div class="col-6">
-                                    <input type="number" value="${txtPhone}" name="phone" id="phoneNumber" class="form-control" maxlength="12" placeholder="Số điện thoại"  aria-describedby="helpId">
+                                    <input type="number" value="${createDataOrder[0].txtPhone}" name="phone" id="phoneNumber" class="form-control" maxlength="12" placeholder="Số điện thoại"  aria-describedby="helpId">
                                     <div class="checkUser false-email" style="display:block" > <span class="require-form">*</span></div>
                                     <small id="checkphone" class="text-muted reNull"></small>
                             </div>
@@ -96,18 +277,7 @@ var codeSteptwo=function(res){
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="form-check">
-                            <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="select-price"  value="0" >
-                            Thanh toán khi nhận hàng
-                        </label>
-                        </div>
-                        <div class="form-check">
-                            <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="select-price"  value="1" >
-                                Chuyển khoản ngân hàng
-                            </label>
-                        </div>
+                        ${methodPay}
                         <div class="form-check">
                             <label class="form-check-label">
                                 <small id="checkmethodPay" class="text-muted reNull"></small>
@@ -136,20 +306,6 @@ var codeSteptwo=function(res){
                             </tr>
                         </thead>
                         <tbody>
-                            ${ Carthtml=""}
-                            ${$.map(res.items, function (elementOrValue, indexOrKey) {
-                                
-                                Carthtml+=`<tr>
-                                <td><img src="/uploads/${elementOrValue.item.image}" width="50" alt=""></td>
-                                <td>${processString(elementOrValue.item.name)}</td>
-                                <td>
-                                    ${elementOrValue.soluong}
-                                    
-                                </td>
-                                <td>${format(elementOrValue.item.price_new)} VNĐ</td>
-                                <td>${format(elementOrValue.item.price_new*elementOrValue.soluong)} VNĐ</td>
-                                </tr>`
-                            })}
                             ${ Carthtml }
                         </tbody>
                     </table>
@@ -175,7 +331,41 @@ var codeSteptwo=function(res){
 }        
 var Sumtotal=0;
 var SumProduct=0;
+/**
+ * Xử lý in sản phẩm
+ * @param {} res : array object cart order
+ * @param {} cb  : callback xử lý khác,
+ */
+function shopCartOder(res,cb) {
+    var Carthtml="";
+    $.map(res.items, function (elementOrValue, indexOrKey) {
+        Carthtml+=`<tr>
+        <td><img src="/uploads/${elementOrValue.item.image}" width="50" alt=""></td>
+        <td>${processString(elementOrValue.item.name)}</td>
+        <td>
+            ${elementOrValue.soluong}
+            
+        </td>
+        <td>${format(elementOrValue.item.price_new)} VNĐ</td>
+        <td>${format(elementOrValue.item.price_new*elementOrValue.soluong)} VNĐ</td>
+        </tr>`
+        // truyền giá sp vs số lượng sp
+        cb(elementOrValue.item.price_new,elementOrValue.soluong);
+    })
+    return Carthtml;
+}
 var codeStepThree=function(res){
+    var k=0;
+    var total=0;
+    infoCartOder=shopCartOder(res,function(a,b){
+        total+=a*b;
+        SumProduct++;
+    })
+    /** Fix lỗi quay lại các bước bị tăng giá sản phẩm */
+    if(k==0){
+        Sumtotal=total;
+        k++;
+    }
     return `<div class="back-out">
     <div class="img-back-out">
         <a href="" class="backOutStepTwo">Quay lại Bước 2</a>
@@ -194,26 +384,7 @@ var codeStepThree=function(res){
                 </tr>
             </thead>
             <tbody>
-                ${Carthtml=""}
-                ${$.map(res.items, function (elementOrValue, indexOrKey) {
-                    txtCustomer=elementOrValue.name;
-                    txtAddressorder=elementOrValue.name;
-                    txtCity=elementOrValue.name;
-                    txtPhone=elementOrValue.name;
-                    txtMethodPay=elementOrValue.methodPay;
-                    Carthtml+=`<tr>
-                    <td><img src="/uploads/${elementOrValue.item.image}" width="50" alt=""></td>
-                    <td>${processString(elementOrValue.item.name)}</td>
-                    <td>
-                        ${elementOrValue.soluong}
-                    </td>
-                    <td>${format(elementOrValue.item.price_new)} VNĐ</td>
-                    <td>${format(elementOrValue.item.price_new*elementOrValue.soluong)} VNĐ</td>
-                    </tr>`
-                    Sumtotal+=elementOrValue.item.price_new*elementOrValue.soluong;
-                    SumProduct++;
-                })}
-                ${ Carthtml }
+                ${ infoCartOder }
             </tbody>
         </table>
         <div class="deliveryinfomation-sale">
@@ -302,12 +473,12 @@ function checkRegisterOrder(){
                 addresscity:$("#addressCity").val(),
                 methodPay:selectPrice[0]
             }
-            txtAddressorder=dl.addressorder;
-            txtCity=dl.addresscity;
-            txtPhone=dl.phone;
-            txtCustomer=dl.name;
-            console.log(txtCustomer);
-            
+            createDataOrder[0].txtCustomer=dl.name;
+            createDataOrder[0].txtAddressorder=dl.addressorder;
+            createDataOrder[0].txtCity=dl.addresscity;
+            createDataOrder[0].txtPhone=dl.phone;
+            createDataOrder[0].txtMethodPay=dl.methodPay;
+            console.log(createDataOrder);
             console.log(dl);
             var url="/cart/udi";
             configAjax(url,dl,function(response){
@@ -505,7 +676,7 @@ function ctgProductSearch(){
  * Search sản phẩm ở mục tất cả sản phẩm
  */
 function AllProductSearch(){
-    $('.allSp #category .search-product #form-search').keyup(function (e) { 
+    $(document).on('keyup','.allSp #category .search-product #form-search', function () {
         $("#show-hu-load").show();
         var searchsp=$(this).val(),
             url="/admin/search",
@@ -756,19 +927,15 @@ function checkValEmail(){
         if(!validateEmail(email)){
             $(".false-email").html(FalseNameEmail);
         }else{
-            $.ajax({
-                type: "post",
-                url: "/register/checkemail",
-                data: {email:email},
-                dataType: "json",
-                success: function (response) {
-                    if(response==true){
-                        $(".false-email").html(TrueNameEmail);
-                    }else{
-                        $(".false-email").html(UserExist);
-                    }
+            var url="/register/checkemail";
+            var data={email:email};
+            configAjax(url,data,function (response) {
+                if(response==true){
+                    $(".false-email").html(TrueNameEmail);
+                }else{
+                    $(".false-email").html(UserExist);
                 }
-            });
+            })
         }
         
     });
@@ -788,19 +955,13 @@ function Dangnhap(){
     $(document).on('click','#UserAcess', function () {
         var username=$("#username-access").val();
         var password=$("#password-access").val();
-        alert(username);
-        $.ajax({
-            type: "POST",
-            url: "/login",
-            data: {
-                username:username,
-                password:password
-            },
-            dataType: "json",
-            success: function (response) {
-                console.log(response);
-                
-            }
+        var url="/login";
+        var data={
+            username:username,
+            password:password
+        }
+        configAjax(url,data,function (response) {
+            console.log(response);
         });
         return false;
     });
@@ -810,28 +971,26 @@ function Dangnhap(){
  */
 var idUser;
 function checkSesssion(){
-    $.ajax({
-        type: "get",
-        url: "/session",
-        success: function (response) {
-            if(response){
-                idUser=response._id;
-                navHeader=`
-                    <li class="nav-item"><a class="nav-link " href="/users/order">Kiểm tra đơn hàng</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Xin Chào ${response.fullname}</a>
-                        <div class="dropdown-menu dropdown-checkout">
-                            <a class="dropdown-item" href="/users">Thông tin cá nhân</a>
-                            <a class="dropdown-item" href="/logout">Đăng xuất</a>
-                        </div>
-                    </li>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Giỏ hàng <i class="fas fa-cart-plus"></i></a>
-                    </li>
-                `;
-                $(".ulcheckss").html(navHeader);
-            }
+    var url="/session";
+    configGetAjax(url,function (response) {
+        if(response){
+            idUser=response._id;
+            navHeader=`
+                <li class="nav-item"><a class="nav-link " href="/users/order">Kiểm tra đơn hàng</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Xin Chào ${response.fullname}</a>
+                    <div class="dropdown-menu dropdown-checkout">
+                        <a class="dropdown-item" href="/users">Thông tin cá nhân</a>
+                        <a class="dropdown-item" href="/logout">Đăng xuất</a>
+                    </div>
+                </li>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Giỏ hàng <i class="fas fa-cart-plus"></i></a>
+                </li>
+            `;
+            $(".ulcheckss").html(navHeader);
         }
-    });
+    })
+   
 }

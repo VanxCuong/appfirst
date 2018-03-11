@@ -1,6 +1,7 @@
 $(document).ready(function () {
     showMenu();
     scroll();
+    cmt();
 });
 function showMenu(){
     $(".nav-item.dropdown").hover(function () {
@@ -20,5 +21,11 @@ function scroll(){
         if($(window).scrollTop()==0){
             $(".header").removeClass("fixed-top")
         }
+    });
+}
+function cmt(){
+    $(document).on('keyup',"#comment-query-main", function () {
+        var val=$(this).val();
+        $(".number-cout").html(val.length);
     });
 }
