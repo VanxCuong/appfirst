@@ -5,6 +5,9 @@ var product=require("../models/product");
 var tollbar=require("../models/admintollbar");
 var order=require("../models/order");
 var comments=require("../models/comments");
+var role=require("../models/role");
+var routerWeb=require("../models/router");
+var GrRole=require("../models/GrRole");
 var router = express.Router();
 
 var storage = multer.diskStorage({
@@ -321,4 +324,75 @@ router.post('/tollbar', function(req, res, next) {
 /**
  * Kết thúc Xử Lý Thanh Công Cụ Cho admin
  */
+/**
+ * Xử lý router phân quyền
+ */
+// Xử lý phần vài trò
+router.get('/role', function(req, res, next) {
+  role.find().exec(function(err,result){
+    res.render("./admin/manager-role",{role:result});
+  })
+  
+});
+router.post('/role', function(req, res, next) {
+  req.check("role","Yêu cầu bạn nhập tên quản trị").notEmpty();
+  var errors=req.validationErrors();
+  if(errors){
+    res.send(errors[0].msg); 
+  }else{
+    dl=new role({
+      role:req.body.role
+    })
+    dl.save(function(err,result){
+      if(err){
+        console.log("Lỗi rồi:",err);
+        res.send("Yêu cầu bạn nhập tên khác");
+      }else{
+         res.redirect('/admin/role');
+      }
+    })
+  }
+});
+// Kết thúc vai trò
+// Xử lý phần router
+router.get('/router', function(req, res, next) {
+  routerWeb.find().exec(function(err,result){
+    role.find().exec(function(err,kq){
+      res.render("./admin/manager-router",{router:result,role:kq});
+    })
+  })
+});
+router.post('/router', function(req, res, next) {
+  var role_id=req.body.role;
+  req.check("name","Yêu cầu bạn nhập tên đường dẫn").notEmpty();
+  req.check("role","Yêu cầu bạn nhập quyền hạn").notEmpty();
+  var errors=req.validationErrors();
+  if(errors){
+    res.send(errors); 
+  }else{
+    dl=new routerWeb({
+      name:req.body.name
+    })
+    
+    dl.save(function(err,result){
+      if(err){
+        console.log("Lỗi rồi:",err);
+        res.send("Yêu cầu bạn nhập tên khác");
+      }else{
+        data=new GrRole({
+          router_id:result._id,
+          role_id:role_id
+        })
+        data.save(function(err,result){
+          if(err){
+            res.send("Yêu cầu bạn nhập tên khác");
+          }else{
+            res.redirect('/admin/router');
+          }
+        })
+      }
+    })
+  }
+});
+// Kết thúc router
 module.exports = router;

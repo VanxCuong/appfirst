@@ -3,13 +3,14 @@ var express = require('express');
 var product=require("../models/product");
 var category=require("../models/category");
 var comments=require("../models/comments");
-var stringToDom = require('string-to-dom');
+var GrRole=require("../models/GrRole");
+var RoleUser=require("../models/RoleUser");
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
   var bcrypt = require('bcryptjs');
 var user=require("../models/user");
 var router = express.Router();
-
+var arrRouter=[];
 passport.use(new LocalStrategy({
   usernameField: 'username',
   passwordField: 'password'
@@ -41,6 +42,7 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
   console.log(`deserializeUser:`,id);
   user.findById(id, function(err, user) {
+    
       done(err, user);
     }).catch(function (err) {
       console.log(err);
@@ -54,6 +56,15 @@ router.get("/session",function(req,res,next){
   if(req.user){
     res.send(req.user);
   }
+})
+router.get("/checkuser",function(req,res,next){
+  id="5aa4b6f65d393f27e09f9d6b";
+  RoleUser.findOne({user_id:id}).populate("role_id").exec(function(err,result){
+    GrRole.findOne({role_id:result.role_id._id}).populate("router_id").exec(function(err,result){
+      console.log(result);
+      
+    })
+  })
 })
 /**
  * Xử Lý phần trang chủ

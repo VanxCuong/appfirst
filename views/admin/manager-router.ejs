@@ -1,0 +1,50 @@
+<% include top %>
+    <div class="col-sm-9 col-xs-12 admin-tollbar mt-3">
+        <div class="row">
+            <div class="jumbotron bg-white btn-block">
+                <h1 class="display-3">Thêm Đường dẫn website</h1>
+                <p class="lead"></p>
+                <hr class="my-2">
+                <form action="/admin/router" method="post">
+                    <div class="form-group rgt-info">
+                    <label for="idNameTollBar">Tên đường dẫn</label>
+                      <input type="text" name="name" id="idNameTollBar" title="Tên Mục" class="form-control" required="" minlength="3"  placeholder="Ví dụ: Quản Lý Admin...">
+                      <div>  <span class="require-form">*</span></div>
+                    </div>
+                    <div class="form-group rgt-info">
+                    <label for="idrole">Vai trò</label>
+                      <select class="form-control" name="role" id="idrole">
+                        <option value="">Lựa chọn</option>    
+                        <% role.forEach(function(i){ %>
+                          <option value="<%= i._id %>"><%= i.role %></option>
+                        <%}) %>
+                      </select>
+                      <div>  <span class="require-form">*</span></div>
+                    </div>
+                    <div class="form-group">
+                      <input type="submit" class="form-control btn btn-outline-danger"  value="Thêm" >
+                    </div>
+                </form>
+                
+            </div>
+            <!-- jumbotron -->
+            <div class="jumbotron bg-white btn-block mt-3">
+                <h1 class="display-3">Quản lý Thanh Công Cụ</h1>
+                <p class="lead"></p>
+                <hr class="my-2">
+                <ul class="list-group mt-3">
+                    <% router.forEach(function(item){%>
+                    <li class="list-group-item d-flex justify-content-between align-items-center ">
+                    <%=item.name%>
+                        <span class="badge badge-secondary badge-pill" >
+                            <a href="/admin/router/<%= item._id%>" class="remove-category">Xóa</a>
+                        </span>
+                    </li>
+                    <%})%>
+                </ul>
+            </div>
+            <!-- jumbotron -->
+        </div>
+    </div>
+    <!-- managerinfo col:12 -->
+<% include bottom %>                
