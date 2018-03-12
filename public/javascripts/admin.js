@@ -216,11 +216,11 @@ format=function(money){
 }
 // Fix tên
 function processString(gt){
-    var k=gt.slice(30);
+    var k=gt.slice(10);
     if(k){
-        gt=gt.slice(0,30)+"...";
+        gt=gt.slice(0,9)+"...";
     }else{
-        gt=gt.slice(0,30);
+        gt=gt.slice(0,9);
     }
     return gt;
 } ;

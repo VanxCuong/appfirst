@@ -23,19 +23,34 @@
                         <th>Hành vi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="reloads">
+                    <% user.forEach(function(i){  %>
                     <tr>
-                        <td><a href="">910ahflakhfkd</a></td>
-                        <td>googlythattuyet@gmail.com</td>
+                        <td><a href=""><%= i.user_id._id %></a></td>
+                        <td><%= i.user_id.email %></td>
                         <td>********</td>
-                        <td>Thành Viên</td>
+                        <td>
+                            <p id="roleUser"><%= i.role_id.role %></p>
+                            <select class="form-control select-role" name="role"  style="display:none">
+                                <option value=""><%= i.role_id.role %></option>
+                                <% role.forEach(function(item){ %>
+                                    <option value="<%= item._id%>"><%= item.role%></option>
+                                <%});%>
+                            </select>
+                        </td>
                         <td>OFFLINE</td>
                         <td>
-                        <a href="" class="float-left btn btn-outline-success">Chỉnh sửa</a>
-                        <a href=""class="float-right btn btn-outline-danger" >Xóa</a>
+                            <div class="behavior">
+                                <a href="" class="float-left btn btn-outline-success edit-user">Chỉnh sửa</a>
+                                <a href=""class="float-right btn btn-outline-danger del-user" >Xóa</a>
+                            </div>   
+                            <div class="behavior-success" style="display:none">
+                                <a href=""class="float-right btn btn-outline-success btn-block save-user"  idu="<%= i.user_id._id %>">Lưu</a>
+                            </div>
                         </td>
 
                     </tr>
+                    <%});%>
                 </tbody>
             </table>
         </div>

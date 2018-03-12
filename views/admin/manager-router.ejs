@@ -35,9 +35,9 @@
                 <ul class="list-group mt-3">
                     <% router.forEach(function(item){%>
                     <li class="list-group-item d-flex justify-content-between align-items-center ">
-                    <%=item.name%>
+                    <%=item.router_id.name%>   -   <%=item.role_id.role %>
                         <span class="badge badge-secondary badge-pill" >
-                            <a href="/admin/router/<%= item._id%>" class="remove-category">Xóa</a>
+                            <a href="/admin/router/<%= item._id%>" class="remove-category"  onclick="if(!confirm('Bạn có muốn xóa không ?')){return false;}" >Xóa</a>
                         </span>
                     </li>
                     <%})%>

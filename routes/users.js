@@ -1,6 +1,8 @@
 var express = require('express');
 var bcrypt = require('bcryptjs');
 var user=require("../models/user");
+var order=require("../models/order");
+var pass=require("../keys/passportjs");
 var router = express.Router();
 
 /* GET users listing. */
@@ -11,13 +13,34 @@ function checkAPI(req, res, next){
       next();
   }
 }
-router.get('/',checkAPI, function(req, res, next) {
+function checkRouter(req,res,next){
+  console.log(req.url);
+  
+  var url="users"+req.url;
+  console.log(url);
+  
+  var k=1;
+  for(var i=0;i<pass.arr.length;i++){
+    if(url==pass.arr[i]){
+      k=0;
+      console.log(url);
+    }
+    console.log(url);
+  }
+  if(k==0){
+    next();
+  }else{
+     res.redirect('/');
+    
+  }
+}
+router.get('/',checkRouter, function(req, res, next) {
   res.render("./user/info-user",{user:req.user});
 });
 /**
  * update thông tin cá nhân Users
  */
-router.post('/updateInfoUser',checkAPI, function(req, res, next) {
+router.post('/updateInfoUser',checkRouter, function(req, res, next) {
   var _id=req.body._id;
   var dl={
     fullname:req.body.fullname,
@@ -29,13 +52,11 @@ router.post('/updateInfoUser',checkAPI, function(req, res, next) {
     if(err){
       console.log("Update lỗi rồi:",err);
     }else{
-      console.log(result);
-      
       res.send(true);
     };
   })
 });
-router.post('/updateContact',checkAPI, function(req, res, next) {
+router.post('/updateContact',checkRouter, function(req, res, next) {
   var _id=req.body._id;
   var dl={
     address:req.body.address
@@ -44,15 +65,12 @@ router.post('/updateContact',checkAPI, function(req, res, next) {
     if(err){
       console.log("Update lỗi rồi:",err);
     }else{
-      console.log(result);
       res.send(true);
     };
   })
 });
-router.post('/updatePassword',checkAPI,function(req,res,next){
+router.post('/updatePassword',checkRouter,function(req,res,next){
   var _id=req.body._id;
-  console.log(_id);
-  
   var passOld=req.body.passOld;
   var dl={
     password:req.body.passRep
@@ -85,14 +103,32 @@ router.post('/updatePassword',checkAPI,function(req,res,next){
     })
   }
 })
+/**
+ * Xử lý quản lý order
+ */
+router.get('/order',checkRouter, function(req, res, next) {
 
-router.get('/order',checkAPI, function(req, res, next) {
-  res.render("./user/manager-order",{user:req.user});
+  order.find({user_id:req.user._id}).populate("product_id").exec(function (err,result) {  
+    res.render("./user/manager-order",{order:result});
+  })
+  
+  
 });
-router.get('/orderNew', checkAPI,function(req, res, next) {
-  res.render("./user/manager-order-new",{user:req.user});
+/**
+ * End Xử lý quản lý order
+ */
+/**
+ * Xử lý order đang chờ
+ */
+router.get('/orderNew', checkRouter,function(req, res, next) {
+  order.find({user_id:req.user._id,status:0}).populate("product_id").exec(function (err,result) {  
+    res.render("./user/manager-order-new",{order:result});
+  })
 });
-router.get('/addressorder', checkAPI,function(req, res, next) {
+/**
+ * End Xử lý order đang chờ
+ */
+router.get('/addressorder', checkRouter,function(req, res, next) {
   res.render("./user/address-order",{user:req.user});
 });
 

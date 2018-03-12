@@ -1,5 +1,4 @@
 var express = require('express');
-// var passport=require("../keys/passportjs");
 var product=require("../models/product");
 var category=require("../models/category");
 var comments=require("../models/comments");
@@ -9,63 +8,17 @@ var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
   var bcrypt = require('bcryptjs');
 var user=require("../models/user");
+var passportjs=require("../keys/passportjs");
 var router = express.Router();
-var arrRouter=[];
-passport.use(new LocalStrategy({
-  usernameField: 'username',
-  passwordField: 'password'
-},
-function(username, password, done) {
-  user.findOne({email:username}).exec(function(err,user){
-    if (err) { return done(err); }
-    if (!user) {
-      console.log(`Khoong phải user`);
-      return done(null, false, { message: 'Tài khoản không tồn tại' });
-    }
-    bcrypt.compare(password, user.password, function(err, res) {
-      if(res){
-          return done(null, user);
-      }else{
-          console.log("Mật khẩu không chính xác");
-          return done(null,false,{message : 'Mật khẩu không chính xác'});
-      }
-    });
-  })
-  
-}
-));
-passport.serializeUser(function(user, done) {
-  console.log(`serializeUser`,user);
-  
-  done(null, user._id);
-});
-passport.deserializeUser(function(id, done) {
-  console.log(`deserializeUser:`,id);
-  user.findById(id, function(err, user) {
-    
-      done(err, user);
-    }).catch(function (err) {
-      console.log(err);
-    });
-  
-});
-
-
 /* GET home page. */
 router.get("/session",function(req,res,next){
   if(req.user){
-    res.send(req.user);
+    RoleUser.findOne({user_id:req.user._id}).populate("user_id").populate("role_id").exec(function (err,result) {  
+      res.send(result);
+    })
   }
 })
-router.get("/checkuser",function(req,res,next){
-  id="5aa4b6f65d393f27e09f9d6b";
-  RoleUser.findOne({user_id:id}).populate("role_id").exec(function(err,result){
-    GrRole.findOne({role_id:result.role_id._id}).populate("router_id").exec(function(err,result){
-      console.log(result);
-      
-    })
-  })
-})
+
 /**
  * Xử Lý phần trang chủ
  */
@@ -73,6 +26,9 @@ router.get("/category",function(req,res,next){
   category.find().exec(function(err,result){
     res.send(result);
   })
+})
+router.get("/check",function(req,res,next){
+  res.send(passportjs.arr);
 })
 router.get('/', function(req, res, next) {
   product.find().skip(0).limit(12).exec(function(err,result){
@@ -99,8 +55,12 @@ router.post('/login',
                                    failureFlash: true })
 );
 router.get('/logout', function(req, res){
+  if(passportjs.arr.length>0){
+    passportjs.arr=[];
+  }
   req.logout();
   res.redirect('/');
+  
 });
 router.post('/cmt/add', function(req, res){
     var dl=new comments({

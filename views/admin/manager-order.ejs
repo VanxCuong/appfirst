@@ -45,17 +45,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% order.forEach(function(item){ %>
-                    <tr>
-                        <td><a href=""><%= item.user_id.fullname %></a></td>
-                        <td><%= getDateTime(item.create_at)%></td>
-                        <td><img src="/uploads/<%= item.product_id.image %>" width="50" alt=""></td>
-                        <td><%= item.product_id.name %></td>
-                        <td><%= item.quanlity %></td>
-                        <td><%= format(item.quanlity*item.product_id.price_new) %> VNĐ</td>
-                        <td><a href="">Chờ giao hàng</a></td>
-                    </tr>
-                    <%});%>
+                <% order.forEach(function(item){ %>
+                <tr>
+                    <td><a href=""><%= item.user_id.fullname %></a></td>
+                    <td><%= getDateTime(item.create_at);%></td>
+                    <td>
+                        <img src="/uploads/<%= item.product_id.image %>" width="50" alt="">
+                    </td>
+                    <td><%= item.product_id.name %></td>
+                    <td><%= item.quanlity %></td>
+                    <td><%= format(item.quanlity*item.product_id.price_new) %> VNĐ</td>
+                    <td><a href="">Chờ giao hàng</a></td>
+                </tr>
+                <%});%>
                     
                 </tbody>
             </table>

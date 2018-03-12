@@ -1,6 +1,42 @@
 $(document).ready(function () {
     penciluser();
+    EditUser();
 });
+/**
+ * Edit interface User
+ */
+function EditUser(){
+    $(document).on('click','.behavior .edit-user', function () {
+        $(this).parent().next().show();
+        $(this).parent().parent().prev().prev().children("#roleUser").hide();
+        $(this).parent().parent().prev().prev().children(".select-role").show();
+        $(this).parent().hide();
+        return false;
+    });
+    $(document).on('click','.behavior-success .save-user', function () {
+        $(this).parent().prev().show();
+        $(this).parent().parent().prev().prev().children("#roleUser").show();
+        $(this).parent().parent().prev().prev().children(".select-role").hide();
+        $(this).parent().hide();
+        var role=$(this).parent().parent().prev().prev().children(".select-role").val();
+        var user_id=$(this).attr("idu");
+        $.ajax({
+            type: "post",
+            url: "/admin/managerusers",
+            data: {
+                role_id:role,
+                user_id:user_id
+            },
+            dataType: "json",
+            success: function (response) {
+                if(response){
+                    $('#reloads').load(location.href + " #reloads>*");
+                }
+            }
+        });
+        return false;
+    });
+}
 /**
  * Chỉnh sửa quản lý tài khoản
  */

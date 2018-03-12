@@ -1,3 +1,4 @@
+
 var express = require('express');
 var multer=require("multer");
 var category=require("../models/category");
@@ -8,7 +9,11 @@ var comments=require("../models/comments");
 var role=require("../models/role");
 var routerWeb=require("../models/router");
 var GrRole=require("../models/GrRole");
+var user=require("../models/user");
+var RoleUser=require("../models/RoleUser");
+var arr=require("../keys/passportjs");
 var router = express.Router();
+
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -32,7 +37,7 @@ var upload = multer({ storage: storage,fileFilter:fileFilter }).single('imagesPr
 /**
  * Bắt đầu Xử lý phần category
  */
-router.get('/', function(req, res, next) {
+router.get('/',checkRouter, function(req, res, next) {
   category.find({},function(err,result){
     res.render('./admin/info-admin', {category:result });
   })
@@ -40,14 +45,31 @@ router.get('/', function(req, res, next) {
 /**
  * THêm Danh Mục
  */
-router.post('/category', function(req, res, next) {
+function checkRouter(req,res,next){
+  var url="admin"+req.url;
+  console.log(url);
+  
+  var k=1;
+  for(var i=0;i<arr.arr.length;i++){
+    if(url==arr.arr[i]){
+      k=0;
+    }
+  }
+  if(k==0){
+    next();
+  }else{
+     res.redirect('/');
+    // next();
+  }
+}
+router.post('/category',checkRouter, function(req, res, next) {
   var nameCategory=req.body.category;
   dl={
     name:nameCategory
   }
   category.create(dl,function(err,result){
     if(err) console.log(`Lỗi rồi:`,err);
-    else  res.redirect('/admin');    
+    else  res.redirect('/admin');
   })
 });
 /**
@@ -56,12 +78,12 @@ router.post('/category', function(req, res, next) {
 /**
  * Bắt đầu xử lý thêm sản phẩm
  */
-router.get('/insertProduct', function(req, res, next) {
+router.get('/insertProduct',checkRouter, function(req, res, next) {
   category.find({},function(err,result){
     res.render('./admin/insert-product', {category:result });
   })
 });
-router.post('/insertProduct',upload, function(req, res, next) {
+router.post('/insertProduct',upload,checkRouter, function(req, res, next) {
   var images=req.file.path.split("\\");
   var price_sale=req.body.priceSale,
       price_old=req.body.price;
@@ -90,19 +112,19 @@ router.post('/insertProduct',upload, function(req, res, next) {
  * Bắt đầu Xử lý Quản lý Sản Phẩm
  */
 var positionProduct=8;
-router.get('/managerProduct', function(req, res, next) {
+router.get('/managerProduct',checkRouter, function(req, res, next) {
   product.find({}).sort({_id:-1}).limit(9).skip(0).exec(function(err,result){
     res.render('./admin/manager-product', { product:result,AmountProduct:result.length});
   })
 });
-router.post('/removeproduct', function(req, res, next) {
+router.post('/removeproduct',checkRouter, function(req, res, next) {
   var id=req.body.id;
   product.remove({_id:id}).exec(function(err,result){
      if(result){res.send(true);}else{res.send(false);}
   })
 });
 // Click xem giá tawng daafn
-router.post("/Decrease",function(req,res,next){
+router.post("/Decrease",checkRouter,function(req,res,next){
   var DecreaseAmount=req.body.number;
   console.log(DecreaseAmount);
   //Vì DecreaseAmount do ajax truyền lên là dạng String nên khi tìm kiếm ta phải chuyển sang Number như bên dưới.
@@ -137,7 +159,7 @@ function SapXep(a,b) {
   return 0;
 }
 // click Xem giá giảm dần
-router.post("/Increase",function(req,res,next){
+router.post("/Increase",checkRouter,function(req,res,next){
   IncreaseAmount=req.body.number;
   product.find({}).sort({_id:-1}).limit(Number(IncreaseAmount)).skip(0).exec(function(err,result){
     result.sort(SapXep);
@@ -149,13 +171,13 @@ router.post("/Increase",function(req,res,next){
   })
 })
 // Xem Thêm Sản Phẩm
-router.post("/amountProduct",function(req,res,next){
+router.post("/amountProduct",checkRouter,function(req,res,next){
   amount=req.body.amount;
   product.find({}).sort({_id:-1}).limit(9).skip(Number(amount)).exec(function(err,result){
     res.send(result);
   })
 })
-router.get('/editproduct/*.:id', function(req, res, next) {
+router.get('/editproduct/*.:id',checkRouter, function(req, res, next) {
   var id=req.params.id;
   product.findById(id).populate("category_id").exec(function(err,result){
     console.log(result);
@@ -172,7 +194,7 @@ router.get('/editproduct/*.:id', function(req, res, next) {
     
   })
 });
-router.post('/editproduct/*.:id',upload, function(req, res, next) {
+router.post('/editproduct/*.:id',upload,checkRouter, function(req, res, next) {
   var id=req.params.id;
   var price_sale=req.body.priceSale,
       price_old=req.body.price;
@@ -240,27 +262,54 @@ router.post("/search",function(req,res,next){
 /**
  * Kết thúc Xử lý Quản lý Sản Phẩm
  */
-router.get('/managerOrder', function(req, res, next) {
+router.get('/managerOrder',checkRouter, function(req, res, next) {
   order.find({status:0}).populate("product_id").populate("user_id").exec(function (err,result) {
     res.render('./admin/manager-order', { order:result });
   })
   
 });
-router.get('/ordersuccess', function(req, res, next) {
+router.get('/ordersuccess',checkRouter, function(req, res, next) {
   res.render('./admin/order-success', { title: 'Express' });
 });
-router.get('/managerusers', function(req, res, next) {
-  res.render('./admin/manager-users', { title: 'Express' });
+/**
+ * Xử lý User
+ */
+router.get('/managerusers',checkRouter, function(req, res, next) {
+  RoleUser.find({}).populate("user_id").populate("role_id").exec(function (err,result) {  
+    role.find().exec(function(err,kq){
+      res.render('./admin/manager-users', { user:result ,role:kq});
+    })
+  })
 });
+router.post('/managerusers',checkRouter, function(req, res, next) {
+  var role_id=req.body.role_id;
+  var user_id=req.body.user_id;
+  console.log(role_id+"-"+user_id);
+  
+  RoleUser.update({user_id:user_id},{role_id:role_id},function (err,result) {  
+    if(err){
+      console.log("Lỗi rồi:",err);
+      
+    }else{
+      res.send(true);
+      console.log(result);
+      
+    }
+  })
+});
+/**
+ * Kết thúc xử lý User
+ */
+
 /**
  * Xử lý phần bình luận
  */
-router.get('/managercomments', function(req, res, next) {
+router.get('/managercomments',checkRouter, function(req, res, next) {
   comments.find({status:0}).sort({_id:1}).limit(20).skip(0).populate("product_id").populate("user_id").exec(function (err,result) {  
     res.render('./admin/manager-comments', { title: 'Express',comments:result, qttCmt:result.length });
   })
 });
-router.get('/acceptsCmt/:id', function(req, res, next) {
+router.get('/acceptsCmt/:id',checkRouter, function(req, res, next) {
   var id=req.params.id;
   console.log(id);
   dl={
@@ -272,14 +321,14 @@ router.get('/acceptsCmt/:id', function(req, res, next) {
     }
   })
 });
-router.get('/DeleteALL', function(req, res, next) {
+router.get('/DeleteALL',checkRouter, function(req, res, next) {
   comments.deleteMany({status:0},function (err,result) {  
     if(result){
       res.send(true);
     }
   })
 });
-router.get('/AcceptALL', function(req, res, next) {
+router.get('/AcceptALL',checkRouter, function(req, res, next) {
   comments.updateMany({},{status:1},function (err,result) {  
     if(result){
       res.send(true);
@@ -289,30 +338,30 @@ router.get('/AcceptALL', function(req, res, next) {
 /**
  * Kết thúc Xử lý phần bình luận
  */
-router.get('/profit', function(req, res, next) {
+router.get('/profit',checkRouter, function(req, res, next) {
   res.render('./admin/profit', { title: 'Express' });
 });
 /**
  * Bắt Đầu Xử Lý Thanh Công Cụ Cho admin
  */
-router.get('/searchtollbar', function(req, res, next) {
+router.get('/searchtollbar',checkRouter, function(req, res, next) {
   tollbar.find({},function(err,result){
     res.send(result);
   })
 });
-router.get('/tollbar/:id', function(req, res, next) {
+router.get('/tollbar/:id',checkRouter, function(req, res, next) {
   var id=req.params.id;
   tollbar.remove({_id:id}).exec(function(err,result){
     res.redirect("/admin/tollbar")
   })
 });
 
-router.get('/tollbar', function(req, res, next) {
+router.get('/tollbar',checkRouter, function(req, res, next) {
   tollbar.find({},function(err,result){
     res.render("./admin/manager-tollbar",{tollbar:result});
   })
 });
-router.post('/tollbar', function(req, res, next) {
+router.post('/tollbar',checkRouter, function(req, res, next) {
   var dl={
     name:req.body.name,
     link:req.body.link
@@ -328,13 +377,13 @@ router.post('/tollbar', function(req, res, next) {
  * Xử lý router phân quyền
  */
 // Xử lý phần vài trò
-router.get('/role', function(req, res, next) {
+router.get('/role',checkRouter, function(req, res, next) {
   role.find().exec(function(err,result){
     res.render("./admin/manager-role",{role:result});
   })
   
 });
-router.post('/role', function(req, res, next) {
+router.post('/role',checkRouter, function(req, res, next) {
   req.check("role","Yêu cầu bạn nhập tên quản trị").notEmpty();
   var errors=req.validationErrors();
   if(errors){
@@ -355,14 +404,14 @@ router.post('/role', function(req, res, next) {
 });
 // Kết thúc vai trò
 // Xử lý phần router
-router.get('/router', function(req, res, next) {
-  routerWeb.find().exec(function(err,result){
+router.get('/router',checkRouter, function(req, res, next) {
+  GrRole.find().populate("role_id").populate("router_id").exec(function(err,result){
     role.find().exec(function(err,kq){
       res.render("./admin/manager-router",{router:result,role:kq});
     })
   })
 });
-router.post('/router', function(req, res, next) {
+router.post('/router',checkRouter, function(req, res, next) {
   var role_id=req.body.role;
   req.check("name","Yêu cầu bạn nhập tên đường dẫn").notEmpty();
   req.check("role","Yêu cầu bạn nhập quyền hạn").notEmpty();
@@ -394,5 +443,12 @@ router.post('/router', function(req, res, next) {
     })
   }
 });
+// Xóa router
+router.get("/router/:id",function (req,res,next) { 
+  id=req.params.id;
+  GrRole.remove({_id:id}).exec(function(err,result){
+    res.redirect("/admin/router");
+  });
+})
 // Kết thúc router
 module.exports = router;

@@ -433,8 +433,8 @@ var codeStepThree=function(res){
 }
 var codeStepFour=function(res){
     return `<h4 class="title-sucess mt-3"><span class="dhtc">Đặt hàng thành công</span> <br>  <span>Sản phẩm sẽ được giao trong 2 ngày tới không tính thứ 7 và chủ nhật.</span></h4>
-    <a href="" class="btn btn-outline-success">Quay lại trang chủ</a>
-    <a href="" class="btn btn-outline-success">Kiểm tra đơn hàng</a>`
+    <a href="/" class="btn btn-outline-success">Quay lại trang chủ</a>
+    <a href="/users/ordernew" class="btn btn-outline-success">Kiểm tra đơn hàng</a>`
 }
 function checkRegisterOrder(){
     url="/session";
@@ -975,10 +975,21 @@ function checkSesssion(){
     configGetAjax(url,function (response) {
         if(response){
             idUser=response._id;
-            navHeader=`
+            $(".ulcheckss").html(navHeaderUser(response));
+        }
+    })
+   
+}
+function navHeaderUser(res){
+    var navadmin="";
+    if(res.role_id.role=="Quản trị"||res.role_id.role=="ADMIN"){
+        navadmin='<li class="nav-item"><a class="nav-link " href="/admin">Quản trị</a></li>';
+    }
+    navHeader=`
+                ${navadmin}
                 <li class="nav-item"><a class="nav-link " href="/users/order">Kiểm tra đơn hàng</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Xin Chào ${response.fullname}</a>
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Xin Chào ${res.user_id.fullname}</a>
                     <div class="dropdown-menu dropdown-checkout">
                         <a class="dropdown-item" href="/users">Thông tin cá nhân</a>
                         <a class="dropdown-item" href="/logout">Đăng xuất</a>
@@ -989,8 +1000,5 @@ function checkSesssion(){
                     <a class="nav-link" href="#">Giỏ hàng <i class="fas fa-cart-plus"></i></a>
                 </li>
             `;
-            $(".ulcheckss").html(navHeader);
-        }
-    })
-   
+    return navHeader;
 }
