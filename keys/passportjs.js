@@ -5,6 +5,7 @@ var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
   var bcrypt = require('bcryptjs');
 var arrRouter=[];
+var arrRouter2=[];
 passport.use(new LocalStrategy({
   usernameField: 'username',
   passwordField: 'password'
@@ -43,16 +44,28 @@ passport.deserializeUser(function(id, done) {
 
 function checkrouter(id) {
   arrRouter=[];
+  arrRouter2=[];
+  var arr=[];
+  
   RoleUser.findOne({user_id:id}).populate("role_id").exec(function(err,result){
     GrRole.find({role_id:result.role_id._id}).populate("router_id").exec(function(err,result){
         for(var i=0;i<result.length;i++){
-          arrRouter.push(result[i].router_id.name);
+          arr=result[i].router_id.name.split("/");
+          if(arrRouter.indexOf(arr[0])<0){
+            arrRouter.push(arr[0]);
+          }
+          if(arrRouter2.indexOf(arr[1])){
+            arrRouter2.push(arr[1]);
+          }
+          // arrRouter.push(result[i].router_id.name);
         }
         module.exports.arr=arrRouter;
+        module.exports.arr2=arrRouter2;
     })
   })
 }
 
 module.exports.passport=passport;
 module.exports.arr=arrRouter;
+module.exports.arr2=arrRouter2;
 

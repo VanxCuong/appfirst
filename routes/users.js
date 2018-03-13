@@ -6,32 +6,25 @@ var pass=require("../keys/passportjs");
 var router = express.Router();
 
 /* GET users listing. */
-function checkAPI(req, res, next){
-  if(!req.user){
-    res.redirect('/');
-  }else{
-      next();
-  }
-}
+
 function checkRouter(req,res,next){
-  console.log(req.url);
-  
   var url="users"+req.url;
-  console.log(url);
-  
+  var tollUrl=url.split("/");
   var k=1;
   for(var i=0;i<pass.arr.length;i++){
-    if(url==pass.arr[i]){
-      k=0;
-      console.log(url);
+    if(pass.arr[i]==tollUrl[0]){
+      for (let index = 0; index < pass.arr2.length; index++) {
+        if(pass.arr2[index]==tollUrl[1]){
+          k=0;
+        }
+      }
     }
-    console.log(url);
   }
   if(k==0){
     next();
   }else{
      res.redirect('/');
-    
+    // next();
   }
 }
 router.get('/',checkRouter, function(req, res, next) {

@@ -12,11 +12,26 @@ var passportjs=require("../keys/passportjs");
 var router = express.Router();
 /* GET home page. */
 router.get("/session",function(req,res,next){
+  var kq="";
   if(req.user){
-    RoleUser.findOne({user_id:req.user._id}).populate("user_id").populate("role_id").exec(function (err,result) {  
-      res.send(result);
+    RoleUser.findOne({user_id:req.user._id}).populate("user_id").populate("role_id").exec(function (err,result) {
+      kq=result;
+      res.send(kq);
     })
+  }else{
+    res.send(kq);
   }
+  console.log(`hihi:`,kq);
+  
+  
+  
+})
+router.get("/giohang",function(req,res,next){
+  var arr=[];
+  if(req.session.cart){
+    arr.push(req.session.cart);
+  }
+  res.send(req.session.cart);
 })
 
 /**
@@ -28,7 +43,7 @@ router.get("/category",function(req,res,next){
   })
 })
 router.get("/check",function(req,res,next){
-  res.send(passportjs.arr);
+  res.send(passportjs.arr+passportjs.arr2);
 })
 router.get('/', function(req, res, next) {
   product.find().skip(0).limit(12).exec(function(err,result){
@@ -55,8 +70,9 @@ router.post('/login',
                                    failureFlash: true })
 );
 router.get('/logout', function(req, res){
-  if(passportjs.arr.length>0){
+  if(passportjs.arr.length>0||passportjs.arr2.length>0){
     passportjs.arr=[];
+    passportjs.arr2=[];
   }
   req.logout();
   res.redirect('/');

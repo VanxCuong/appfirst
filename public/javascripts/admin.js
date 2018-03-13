@@ -66,7 +66,7 @@ function checkSort(url,idClick){
         var number=$("#showProduct").attr("idsp");
         data={number:number};
         configAjax(url,data,function(response){
-            var html=eachResult(response);
+            var html=eachResulta(response);
             $(".show-sp-search").html(html);
         });
         return false;
@@ -100,7 +100,7 @@ function showProduct(){
         url="/admin/amountProduct";
         configAjax(url,data,function(response){
             amount+=response.length;
-            var html=eachResult(response);
+            var html=eachResulta(response);
             $(".show-sp-search").append(html);
             // Nếu kết quả trả về < 9 thì ẩn button xem thêm sp
             if(response.length<9){
@@ -113,7 +113,7 @@ function showProduct(){
         return false;
     });
 }
-function eachResult(response){
+function eachResulta(response){
     var html="";
     $.each(response, function (indexInArray, valueOfElement) { 
         var thanhtien=valueOfElement.price_old-(valueOfElement.price_old*valueOfElement.price_sale/100); 
@@ -182,7 +182,7 @@ function searchsp(){
                 }else{
                     $(".checksp").html("");
                 }
-                html= eachResult(response);
+                html= eachResulta(response);
                 $(".show-sp-search").html(html);
             })
         return false;
@@ -216,11 +216,11 @@ format=function(money){
 }
 // Fix tên
 function processString(gt){
-    var k=gt.slice(10);
+    var k=gt.slice(20);
     if(k){
-        gt=gt.slice(0,9)+"...";
+        gt=gt.slice(0,19)+"...";
     }else{
-        gt=gt.slice(0,9);
+        gt=gt.slice(0,19);
     }
     return gt;
 } ;

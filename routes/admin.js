@@ -47,12 +47,15 @@ router.get('/',checkRouter, function(req, res, next) {
  */
 function checkRouter(req,res,next){
   var url="admin"+req.url;
-  console.log(url);
-  
+  var tollUrl=url.split("/");
   var k=1;
   for(var i=0;i<arr.arr.length;i++){
-    if(url==arr.arr[i]){
-      k=0;
+    if(arr.arr[i]==tollUrl[0]){
+      for (let index = 0; index < arr.arr2.length; index++) {
+        if(arr.arr2[index]==tollUrl[1]){
+          k=0;
+        }
+      }
     }
   }
   if(k==0){
@@ -277,6 +280,7 @@ router.get('/ordersuccess',checkRouter, function(req, res, next) {
 router.get('/managerusers',checkRouter, function(req, res, next) {
   RoleUser.find({}).populate("user_id").populate("role_id").exec(function (err,result) {  
     role.find().exec(function(err,kq){
+      // res.send(result);
       res.render('./admin/manager-users', { user:result ,role:kq});
     })
   })
@@ -305,7 +309,8 @@ router.post('/managerusers',checkRouter, function(req, res, next) {
  * Xử lý phần bình luận
  */
 router.get('/managercomments',checkRouter, function(req, res, next) {
-  comments.find({status:0}).sort({_id:1}).limit(20).skip(0).populate("product_id").populate("user_id").exec(function (err,result) {  
+  comments.find({status:0}).populate("user_id").populate("product_id").sort({_id:1}).limit(20).skip(0).exec(function (err,result) {  
+    // res.send(result);
     res.render('./admin/manager-comments', { title: 'Express',comments:result, qttCmt:result.length });
   })
 });
@@ -316,6 +321,15 @@ router.get('/acceptsCmt/:id',checkRouter, function(req, res, next) {
     status:"1",
   }
   comments.update({_id:id},dl,function (err,result) {  
+    if(result){
+      res.send(true);
+    }
+  })
+});
+router.get('/deleteCmt/:id',checkRouter, function(req, res, next) {
+  var id=req.params.id;
+  console.log(id);
+  comments.remove({_id:id},function (err,result) {  
     if(result){
       res.send(true);
     }

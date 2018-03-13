@@ -70,6 +70,8 @@ function ShowComment(){
         var product=$(".comment-product").attr("idproduct");
         var link=$(".comment-product").attr("linkProduct");
         url="/cmt/add";
+        console.log(`ID:`+idUser);
+        
         data={
             content:bl,
             user_id:idUser,
@@ -102,9 +104,6 @@ function ShowComment(){
     if(pstCmt[1]=="show"){
         configGetAjax(loadbl,function (res) {
             if(res){
-                console.log("hihi");
-                console.log(res);
-                
                 $("#frames-comment").html(loadCmt(res));
                 if(res.length>=7){
                     $(".show-comment").html(showCmt);
@@ -359,7 +358,7 @@ var codeStepThree=function(res){
     var total=0;
     infoCartOder=shopCartOder(res,function(a,b){
         total+=a*b;
-        SumProduct++;
+        SumProduct+=b;
     })
     /** Fix lỗi quay lại các bước bị tăng giá sản phẩm */
     if(k==0){
@@ -743,8 +742,8 @@ function eachResult(response){
                     <a href="#"><h4 class="card-title">${processString(valueOfElement.name)}</h4></a>
                     <p class="card-text price-new">${ format(thanhtien)}  VNĐ</p>
                     <p class="card-text "> 
-                        <span class="price-old">${ format(valueOfElement.price_old)} %></span> 
-                        <span class="price-sale">${valueOfElement.price_sale}%</span>
+                        <span class="price-old">${ format(valueOfElement.price_old)} %</span> 
+                        <span class="price-sale">${valueOfElement.price_sale}% </span>
                         
                     </p>
                 </div>
@@ -768,11 +767,11 @@ format=function(money){
 }
 // Fix tên
 function processString(gt){
-    var k=gt.slice(30);
+    var k=gt.slice(20);
     if(k){
-        gt=gt.slice(0,30)+"...";
+        gt=gt.slice(0,19)+"...";
     }else{
-        gt=gt.slice(0,30);
+        gt=gt.slice(0,19);
     }
     return gt;
 } ;
@@ -970,35 +969,72 @@ function Dangnhap(){
  * check xem đã đăng nhập chưa
  */
 var idUser;
+var Globalnavbar="";
 function checkSesssion(){
     var url="/session";
     configGetAjax(url,function (response) {
         if(response){
-            idUser=response._id;
+            idUser=response.user_id._id;
+            $(".ulcheckss").html(navHeaderUser(response));
+        }else{
             $(".ulcheckss").html(navHeaderUser(response));
         }
     })
-   
+    configGetAjax("/giohang",function(response){
+        var soluong=0;
+        if(response){
+            $.each(response.items, function (indexInArray, valueOfElement) { 
+                soluong+=Number(valueOfElement.soluong);
+            });
+            // Do check session quá nhanh nên phải đặt time cho giỏ hàng...
+            setTimeout(() => {
+                if(soluong==0){
+                    $("#quantityCart").html("");
+                }else{
+                    $("#quantityCart").html(`(${soluong})`);
+                }
+            }, 200);
+        }else{
+            $("#quantityCart").html("");
+        }
+    })
 }
+/**
+ * 
+ * @param {*} res 
+ */
 function navHeaderUser(res){
     var navadmin="";
-    if(res.role_id.role=="Quản trị"||res.role_id.role=="ADMIN"){
-        navadmin='<li class="nav-item"><a class="nav-link " href="/admin">Quản trị</a></li>';
+    var navHeader="";
+    if(res==""){
+        navHeader=`<li class="nav-item">
+                <a class="nav-link" href="#form-dangnhap" data-toggle="modal">Đăng Nhập <i class="fas fa-users"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/register">Đăng Ký <i class="fas fa-address-card"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/cart">Giỏ hàng <i class="fas fa-cart-plus"></i> <span id="quantityCart"></span></a>
+            </li>`
+    }else{
+        if(res.role_id.role=="Quản trị"||res.role_id.role=="ADMIN"){
+            navadmin='<li class="nav-item"><a class="nav-link " href="/admin">Quản trị</a></li>';
+        }
+        navHeader=`
+            ${navadmin}
+            <li class="nav-item"><a class="nav-link " href="/users/order">Kiểm tra đơn hàng</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Xin Chào ${res.user_id.fullname}</a>
+                <div class="dropdown-menu dropdown-checkout">
+                    <a class="dropdown-item" href="/users">Thông tin cá nhân</a>
+                    <a class="dropdown-item" href="/logout">Đăng xuất</a>
+                </div>
+            </li>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/cart">Giỏ hàng <i class="fas fa-cart-plus"></i> <span id="quantityCart"></span> </a>
+            </li>
+        `;
     }
-    navHeader=`
-                ${navadmin}
-                <li class="nav-item"><a class="nav-link " href="/users/order">Kiểm tra đơn hàng</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Xin Chào ${res.user_id.fullname}</a>
-                    <div class="dropdown-menu dropdown-checkout">
-                        <a class="dropdown-item" href="/users">Thông tin cá nhân</a>
-                        <a class="dropdown-item" href="/logout">Đăng xuất</a>
-                    </div>
-                </li>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Giỏ hàng <i class="fas fa-cart-plus"></i></a>
-                </li>
-            `;
     return navHeader;
 }
