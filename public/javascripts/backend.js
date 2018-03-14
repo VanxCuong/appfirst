@@ -358,7 +358,7 @@ var codeStepThree=function(res){
     var total=0;
     infoCartOder=shopCartOder(res,function(a,b){
         total+=a*b;
-        SumProduct+=b;
+        SumProduct+=Number(b) ;
     })
     /** Fix lỗi quay lại các bước bị tăng giá sản phẩm */
     if(k==0){
@@ -524,7 +524,6 @@ function checkRegisterOrder(){
         var url="/cart/checkcart"
         configGetAjax(url,function(response){
             $.each(response.items, function (indexInArray, valueOfElement) { 
-                CheckQuanLiTyProduct++;
                 var dl={
                     idUser:idUser,
                     idProduct:indexInArray,
@@ -535,16 +534,18 @@ function checkRegisterOrder(){
                     phone:valueOfElement.phone,
                     addressorder:valueOfElement.addressorder
                 }
-                var url="/cart/order"
+                var url="/cart/order";
                 setTimeout(() => {
                     configAjax(url,dl,function(response){
-                        if(CheckQuanLiTyProduct==valueOfElement.soluong){
+                        if(CheckQuanLiTyProduct==0){ // Nếu số lượng
                             editItf(".successStepThree","#stepthree","#stepfour","#success");
                             $("#success").html(codeStepFour(response));
+                            CheckQuanLiTyProduct++;
                         }
                     })
                 }, 100);
             });
+            CheckQuanLiTyProduct=0;
         })
         
         

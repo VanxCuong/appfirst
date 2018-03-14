@@ -7,7 +7,35 @@ $(document).ready(function () {
     ShowSortIncrease();
     showTollbar();
     AcceptCmt();
+    handlingOrder();
 });
+
+/**
+ * Xử lý trạng thái order
+ */
+function handlingOrder() {  
+    $(document).on('click','.fix-status', function () {
+        $(this).next().show();
+        $(this).hide();
+        return false;
+    });
+    $(document).on('change',"select[name='successStatus']", function () {
+        id=$(this).attr("idu");
+        if($(this).val()=="1"){
+            configGetAjax("/admin/handlingStatus/"+id,function (res) {
+                $('#reloads').load(location.href + " #reloads>*");
+            })
+        }else if($(this).val()=="2"){
+            configGetAjax("/admin/delOrder/"+id,function (res) {
+                $('#reloads').load(location.href + " #reloads>*");
+            })
+        }else{
+            $('#reloads').load(location.href + " #reloads>*");
+        }
+    });
+    
+}
+
 /**
  * Xử Lý Phần Bình Luận
  */

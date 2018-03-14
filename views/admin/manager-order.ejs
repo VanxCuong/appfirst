@@ -44,7 +44,7 @@
                         <th>Trạng thái</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="reloads">
                 <% order.forEach(function(item){ %>
                 <tr>
                     <td><a href=""><%= item.user_id.fullname %></a></td>
@@ -55,7 +55,14 @@
                     <td><%= item.product_id.name %></td>
                     <td><%= item.quanlity %></td>
                     <td><%= format(item.quanlity*item.product_id.price_new) %> VNĐ</td>
-                    <td><a href="">Chờ giao hàng</a></td>
+                    <td>
+                        <a href="" class="fix-status" >Chờ giao hàng</a>
+                        <select name="successStatus" class="form-control" idu="<%=item._id%>" class="success-status" style="display:none">
+                            <option value="0">Chờ giao hàng</option>
+                            <option value="1">Giao hàng thành công</option>
+                            <option value="2">Hủy đơn hàng</option>
+                        </select>
+                    </td>
                 </tr>
                 <%});%>
                     

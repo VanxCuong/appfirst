@@ -66,15 +66,29 @@ function checkRouter(req,res,next){
   }
 }
 router.post('/category',checkRouter, function(req, res, next) {
-  var nameCategory=req.body.category;
-  dl={
-    name:nameCategory
+  req.check("category","Yêu cầu bạn nhập tên danh mục").notEmpty();
+  var errors=req.validationErrors();
+  if(errors){
+    res.send(errors[0].msg); 
+  }else{
+    var nameCategory=req.body.category;
+    dl={
+      name:nameCategory
+    }
+    category.create(dl,function(err,result){
+      if(err) console.log(`Lỗi Insert category:`,err);
+      else  res.redirect('/admin');
+    })
   }
-  category.create(dl,function(err,result){
-    if(err) console.log(`Lỗi rồi:`,err);
-    else  res.redirect('/admin');
-  })
 });
+router.get("/category/:id",checkRouter,function(req,res,next){
+  id=req.params.id;
+  product.remove({category_id:id},function (err,result) {  
+    category.remove({_id:id},function(err,result){
+       res.redirect('/admin');
+    })
+  })
+})
 /**
  * Kết thúc xử lý category
  */
@@ -87,26 +101,40 @@ router.get('/insertProduct',checkRouter, function(req, res, next) {
   })
 });
 router.post('/insertProduct',upload,checkRouter, function(req, res, next) {
-  var images=req.file.path.split("\\");
-  var price_sale=req.body.priceSale,
-      price_old=req.body.price;
-  var price_new=price_old-(price_sale*price_old/100);
-  var Newproduct=new product({
-    name:req.body.name,
-    image:images[2],
-    content:req.body.content,
-    description:req.body.infoProduct,
-    description_detail:req.body.detailProduct,
-    price_sale:price_sale,
-    price_old:price_old,
-    price_new:price_new,
-    amount:req.body.number,
-    category_id:req.body.category_id,
-    link:req.body.link
-  })
-  Newproduct.save(function(err,result){
-    res.redirect('/admin/insertProduct');
-  })
+  req.check("name","Bạn chưa nhập tên").isLength({min:2}).notEmpty();
+  req.check("price","Bạn chưa nhập giá cho sản phẩm").notEmpty();
+  req.check("link","Yêu cầu bạn nhập link theo định dạng, VD: link-a-b-c").notEmpty();
+  var errors=req.validationErrors();
+  if(errors){
+    xhtml="";
+    console.log(errors);
+    
+    for (let index = 0; index < errors.length; index++) {
+      xhtml+=`<h5>${errors[index].msg}</h5>`
+    }
+    res.send(xhtml);
+  }else{
+    var images=req.file.path.split("\\");
+    var price_sale=req.body.priceSale,
+        price_old=req.body.price;
+    var price_new=price_old-(price_sale*price_old/100);
+    var Newproduct=new product({
+      name:req.body.name,
+      image:images[2],
+      content:req.body.content,
+      description:req.body.infoProduct,
+      description_detail:req.body.detailProduct,
+      price_sale:price_sale,
+      price_old:price_old,
+      price_new:price_new,
+      amount:req.body.number,
+      category_id:req.body.category_id,
+      link:req.body.link
+    })
+    Newproduct.save(function(err,result){
+      res.redirect('/admin/insertProduct');
+    })
+  }
 });
 /**
  * Kết thúc xử lý thêm sản phẩm
@@ -122,19 +150,23 @@ router.get('/managerProduct',checkRouter, function(req, res, next) {
 });
 router.post('/removeproduct',checkRouter, function(req, res, next) {
   var id=req.body.id;
-  product.remove({_id:id}).exec(function(err,result){
-     if(result){res.send(true);}else{res.send(false);}
+  comments.remove({product_id:id},function (err,result) {  
+    order.remove({product_id:id},function (err,result) {  
+      product.remove({_id:id}).exec(function(err,result){
+        if(result){res.send(true);}else{res.send(false);}
+     })
+    })
   })
+  
 });
 // Click xem giá tawng daafn
 router.post("/Decrease",checkRouter,function(req,res,next){
   var DecreaseAmount=req.body.number;
-  console.log(DecreaseAmount);
   //Vì DecreaseAmount do ajax truyền lên là dạng String nên khi tìm kiếm ta phải chuyển sang Number như bên dưới.
   product.find({}).sort({_id:-1}).limit(Number(DecreaseAmount)).skip(0).exec(function(err,result){
     result.sort(compare);
     if(err) {
-      console.log("Lỗi rồi:",err);
+      console.log("Sắp xếp Decrease Lỗi rồi:",err);
     }else{
       res.send(result);
     }
@@ -167,7 +199,7 @@ router.post("/Increase",checkRouter,function(req,res,next){
   product.find({}).sort({_id:-1}).limit(Number(IncreaseAmount)).skip(0).exec(function(err,result){
     result.sort(SapXep);
     if(err) {
-      console.log("Lỗi rồi:",err);
+      console.log("Increase Lỗi rồi:",err);
     }else{
       res.send(result);
     }
@@ -183,8 +215,6 @@ router.post("/amountProduct",checkRouter,function(req,res,next){
 router.get('/editproduct/*.:id',checkRouter, function(req, res, next) {
   var id=req.params.id;
   product.findById(id).populate("category_id").exec(function(err,result){
-    console.log(result);
-    
     category.find().exec(function(err,kq){
       if(err){
         console.log("Tìm ID Sửa SP Lỗi rồi:",err);
@@ -254,7 +284,6 @@ router.post("/search",function(req,res,next){
   const regex=new RegExp(escapeRegex(searchsp),'gi');
   product.find({name:regex},function(err,result){
     if(result.length<1){
-      console.log("ihih");
       res.send(false);
     }else{
       res.send(result);
@@ -271,9 +300,28 @@ router.get('/managerOrder',checkRouter, function(req, res, next) {
   })
   
 });
-router.get('/ordersuccess',checkRouter, function(req, res, next) {
-  res.render('./admin/order-success', { title: 'Express' });
+
+router.get('/handlingStatus/:id',checkRouter, function(req, res, next) {
+  order.updateOne({_id:req.params.id},{status:1},function (err,result) {  
+    res.send(true);
+  })
 });
+router.get('/delOrder/:id',checkRouter, function(req, res, next) {
+  order.remove({_id:req.params.id},function (err,result) {  
+    res.send(true);
+  })
+});
+
+/**
+ * Quản Lý Đơn Hàng Đã Giao
+ */
+router.get('/ordersuccess',checkRouter, function(req, res, next) {
+  order.find({status:1}).populate("product_id").populate("user_id").exec(function (err,result) {
+    res.render('./admin/order-success', { order:result });
+  })
+});
+
+
 /**
  * Xử lý User
  */
@@ -301,6 +349,19 @@ router.post('/managerusers',checkRouter, function(req, res, next) {
     }
   })
 });
+//Xóa User
+router.get("/deleteUser/:id",function (req,res,next) {  
+  id=req.params.id;
+  comments.remove({user_id:id},function (err,result) {  
+    order.remove({user_id:id},function (err,result) {  
+      RoleUser.remove({user_id:id},function (err,result) {  
+        user.remove({_id:id},function (err,result) {  
+           res.redirect('/admin/managerusers');
+        })
+      })
+    })
+  })
+})
 /**
  * Kết thúc xử lý User
  */

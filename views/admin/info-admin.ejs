@@ -26,7 +26,7 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center ">
                         <%= item.name %>
                         <span class="badge badge-secondary badge-pill" >
-                            <a href="<%= item._id %>" class="remove-category">Xóa</a>
+                            <a href="/admin/category/<%= item._id %>" onclick="if(!confirm('Bạn có muốn sẽ xóa tất cả thông tin liên quan đến danh mục: <%= item.name%> ?')){return false;}" class="remove-category">Xóa</a>
                         </span>
                     </li>
                     <%}) %>

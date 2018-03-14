@@ -75,6 +75,8 @@ router.post("/order",function(req,res,next){
     if(err){
       res.send(false)
     }else{
+      // Mua thành công ... Giỏ hàng =null
+      req.session.cart=null;
       res.send(true);
     }
   })

@@ -12,10 +12,13 @@
                     </form>
                 </div>
             </div>
-            <table class="table table-striped table-bordered table-responsive-sm mt-3">
+            <div class="node-user mt-3">
+                <p>Lưu Ý: Bạn Xóa User là bạn sẽ Xóa mọi dữ liệu liên quan đến thành viên này: order,comments,quản trị,...</p>
+            </div>
+            <table class="table table-striped table-bordered table-responsive-sm ">
                 <thead class="thead-light ">
                     <tr>
-                        <th>Mã KH</th>
+                        <th>KH</th>
                         <th>Email</th>
                         <th>Mật khẩu</th>
                         <th>Cấp bậc</th>
@@ -26,7 +29,7 @@
                 <tbody id="reloads">
                     <% user.forEach(function(i){  %>
                     <tr>
-                        <td><a href=""><%= i.user_id._id %></a></td>
+                        <td class="text-center"><a href=""><%= i.user_id.fullname %></a></td>
                         <td><%= i.user_id.email %></td>
                         <td>********</td>
                         <td>
@@ -42,8 +45,8 @@
                         <td>
                             <div class="behavior">
                                 <a href="" class="float-left btn btn-outline-success edit-user">Chỉnh sửa</a>
-                                <a href=""class="float-right btn btn-outline-danger del-user" >Xóa</a>
-                            </div>   
+                                <a href="/admin/deleteUser/<%= i.user_id._id %>" onclick="if(!confirm('Bạn có muốn sẽ xóa tất cả thông tin liên quan đến:<%= i.user_id.email%> ?')){return false;}"  class="float-right btn btn-outline-danger del-user" >Xóa</a>
+                            </div>
                             <div class="behavior-success" style="display:none">
                                 <a href=""class="float-right btn btn-outline-success btn-block save-user"  idu="<%= i.user_id._id %>">Lưu</a>
                             </div>

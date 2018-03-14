@@ -9,7 +9,7 @@
                 <form action="/admin/insertProduct" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                       <label for="">Tên Sản Phẩm</label>
-                      <input type="text" name="name"  class="form-control" placeholder="" aria-describedby="helpId">
+                      <input type="text" name="name"  class="form-control" placeholder="" required >
                       <small id="helpId" class="text-muted">Help text</small>
                     </div>
                     <div class="form-group">
@@ -22,7 +22,7 @@
                     </div>
                     <div class="form-group">
                       <label for="">Hình ảnh</label>
-                      <input type="file" name="imagesProduct" class="form-control" placeholder="" aria-describedby="helpId">
+                      <input type="file" name="imagesProduct" class="form-control" required placeholder="" aria-describedby="helpId">
                     </div>
                     <div class="form-group">
                       <label for="editor">Mô tả trên khung sản phẩm</label>
@@ -31,22 +31,22 @@
                     </div>
                     <div class="form-group">
                       <label for="">Giá sản phẩm</label>
-                      <input type="text" name="price"  class="form-control" placeholder="Giá gốc sản phẩm" aria-describedby="helpId">
-                      <small id="helpId" class="text-muted">Help text</small>
+                      <input type="text" name="price" required pattern="[0-9]{4,}" class="form-control" placeholder="Giá gốc sản phẩm" aria-describedby="helpId">
+                      <small id="helpId" class="text-muted">VD:999999</small>
                     </div>
                     <div class="form-group">
                       <label for="">Giảm giá (%)</label>
-                      <input type="text" name="priceSale"  class="form-control" placeholder="Đơn vị mặc định %" aria-describedby="helpId">
-                      <small id="helpId" class="text-muted">Help text</small>
+                      <input type="text" name="priceSale" pattern="[0-9]{0,}" class="form-control" placeholder="Đơn vị mặc định %" aria-describedby="helpId">
+                      <small id="helpId" class="text-muted">VD:10   (Không cần ghi %)</small>
                     </div>
                     <div class="form-group">
                       <label for="">Số lượng</label>
-                      <input type="text" name="number"  class="form-control" placeholder="Số lượng sản phẩm" aria-describedby="helpId">
-                      <small id="helpId" class="text-muted">Help text</small>
+                      <input type="text" name="number" pattern="[0-9]{1,}" class="form-control" placeholder="Số lượng sản phẩm" aria-describedby="helpId">
+                      <small id="helpId" class="text-muted"></small>
                     </div>
                     <div class="form-group">
                       <label for="">Đường dẫn</label>
-                      <input type="text" name="link"  class="form-control" placeholder="Ví dụ: tên sản phẩm: Giày thể thao thì điền giay-the-thao" aria-describedby="helpId">
+                      <input type="text" name="link" pattern="[a-zA-Z0-9._%+-._%+//]+" required  class="form-control" placeholder="Ví dụ: tên sản phẩm: Giày thể thao thì điền giay-the-thao" aria-describedby="helpId">
                       <small id="helpId" class="text-muted"></small>
                     </div>
                     <div class="form-group">
