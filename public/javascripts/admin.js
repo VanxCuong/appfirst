@@ -5,11 +5,128 @@ $(document).ready(function () {
     showProduct();
     ShowSortDecrease();
     ShowSortIncrease();
+    ShowOrderSuccess();
     showTollbar();
     AcceptCmt();
     handlingOrder();
+    ShowComments();
+    ShowUsers();
+    
 });
 
+/**
+ * Hàm tối ưu code click xem thêm sản phẩm
+ * @param {*} a : Class or ID Click
+ * @param {*} b : url post
+ * @param {*} cb : function: Xử lý chức năng khác
+ */
+function fixCodeShow(a,b,cb){
+    $(document).on('click','#'+a+'', function () {
+        $(".Hu-load").show();
+        var sl=$(this).attr("sl");
+        var url=b;
+        var data={sl:sl};
+        configAjax(url,data,function (response) {  
+            if(response){
+                cb(response,sl);
+                $(".Hu-load").hide();
+            }
+        });
+        return false;
+    });
+}
+
+//Fix code search SP
+/**
+ * Hàm tối ưu code tìm kiếm sản phẩm
+ * @param {*} a : Class or ID Click
+ * @param {*} b : url post
+ * @param {*} cb : function: Xử lý chức năng khác
+ */
+function fixCodeSeach(a,b,cb){
+    $(document).on('keyup',a, function () {
+        $(".Hu-load").show();
+        var searchsp=$(this).val(),
+            url=b,
+            data={searchsp:searchsp};
+            configAjax(url,data,function(response){
+                if(response==false ){
+                    $("#reloads").html("");
+                    $(".checksp").html('<p>Không tìm thấy: '+searchsp+' </p>').css({"color":"red","font-weight":"bold"});
+                }else{
+                    $(".checksp").html("");
+                    cb(response);
+                }
+                $(".Hu-load").hide();
+                
+            })
+        return false;
+    });
+}
+/**
+ * Xem thêm Users
+ */
+function ShowUsers() {  
+    // Xem THêm User
+    fixCodeShow("ShowUsers","/admin/ShowUsers",function (response,sl) {  
+        $("#reloads").append(UsersCode(response));
+        if(response.user.length<20){
+            $('.ShowUsers').hide();
+        }
+        sl=Number(sl)+Number(response.user.length);
+        $('.ShowUsers').html(`<a href="#" class="btn btn-danger" id="ShowUsers" sl="${sl}" </a>Xem Thêm</a>`);
+    });
+    //Tìm Kiếm User
+    fixCodeSeach(".manager-users #form-search","/admin/searchUsers",function (response) {  
+        html= UsersCode(response);
+        $("#reloads").html(html);
+        $("#ShowUsers").hide();
+    })
+    /** Select theo cấp bậc */
+    $(document).on('click','.selectLevel', function () {
+        idRole=$(this).attr("idu");
+        configGetAjax("/admin/selectLevel/"+idRole,function (response) {  
+            if(response){
+                html= UsersCode(response);
+                $("#reloads").html(html);
+                $("#ShowUsers").hide();
+            }
+        })
+        return false;
+    });
+}
+function UsersCode(res) {  
+    var kq="";
+    var role="";
+    $.each(res.role, function (i, v) { 
+        role+=`<option value="${v._id}">${ v.role }</option>`;         
+    });
+    $.each(res.user, function (i, v) { 
+        kq+=`<tr>
+            <td class="text-center"><a href="">${ v.user_id.fullname }</a></td>
+            <td>${ v.user_id.email }</td>
+            <td>********</td>
+            <td>
+                <p id="roleUser">${ v.role_id.role }</p>
+                <select class="form-control select-role" name="role"  style="display:none">
+                    <option value="">${ v.role_id.role }</option>
+                    ${role}
+                </select>
+            </td>
+            <td>OFFLINE</td>
+            <td>
+                <div class="behavior">
+                    <a href="" class="float-left btn btn-outline-success edit-user">Chỉnh sửa</a>
+                    <a href="/admin/deleteUser/${v.user_id._id}" onclick="if(!confirm('Bạn có muốn sẽ xóa tất cả thông tin liên quan đến:${ v.user_id.email} ?')){return false;}"  class="float-right btn btn-outline-danger del-user" >Xóa</a>
+                </div>
+                <div class="behavior-success" style="display:none">
+                    <a href=""class="float-right btn btn-outline-success btn-block save-user"  idu="${ v.user_id._id }">Lưu</a>
+                </div>
+            </td>
+        </tr>`;
+    });
+    return kq;
+}
 /**
  * Xử lý trạng thái order
  */
@@ -70,8 +187,92 @@ var xulybinhluan=function(a,cb){
         }
         return false;
     });
+}
+// Xem Thêm Bình Luận
+function ShowComments(){
+    fixCodeShow("ShowComments","/admin/showComments",function (response,sl) {  
+        $(".manager-comments #reloads").append(CommentsCode(response));
+        sl=Number(sl)+Number(response.length);
+        if(response.length<20){
+            $(".ShowComments").hide();
+        }
+        $(".ShowComments").html(`<a href="#" class="btn btn-danger" id="ShowComments" sl="${sl}" </a>Xem Thêm</a>`);
+    });
+}
+function CommentsCode(res){
+    kq="";
+    $.each(res, function (i, v) { 
+        kq+=`<tr>
+            <td><a href="/show/${ v.product_id.link }"><img src="/uploads/${ v.product_id.image }" width="50" alt=""></a></td>
+            <td idkh="${ v.user_id._id}"><a href="">${ v.user_id.fullname}</a></td>
+            <td >${ v.content}</td>
+            <td>
+                <a href="" class="float-left btn btn-outline-success" id="AcceptCmt" idu="${ v._id}" >Chấp nhận </a>
+                <a href=""class="float-right btn btn-outline-danger " id="deleteCmt" idu="${ v._id}" >Xóa</a>
+            </td>
+        </tr>`
+    });
+    return kq;
+}
+/**
+ *  Xem Thêm Order
+ */
+function ShowOrderSuccess(){
+    fixCodeShow("showOrderSucces","/admin/showOrderSuccess",function (response,sl) {  
+        $(".manager-order-success #reloads").append(OrderSuccess(response));
+        sl=Number(sl)+Number(response.length);
+        if(response.length<20){
+            $(".showOrderSucces").hide();
+        }
+        $(".showOrderSucces").html(`<a href="#" class="btn btn-danger" id="showOrderSucces" sl="${sl}" </a>Xem Thêm</a>`);
+    });
+    // Tìm kiếm sản phẩm
+    fixCodeSeach(".manager-order-success #form-search","/admin/searchOrderSuccess",function (response) {  
+        html= OrderSuccess(response);
+        $("#reloads").html(html);
+        $("#showOrderSucces").hide();
+    });
+}
+function OrderSuccess(res) {  
+    kq="";
+    $.each(res, function (i, v) { 
+        kq+=`<tr>
+        <td><a href="">${ v.user_id.fullname}</a></td>
+        <td>${ getDateTime(v.create_at) }</td>
+        <td><a href="/show/${ v.product_id.link }"><img src="/uploads/${ v.product_id.image }" width="50" alt=""></a></td>
+        <td>${ v.product_id.name}</td>
+        <td>${ v.quanlity}</td>
+        <td>${ format(v.quanlity*v.product_id.price_new) } VNĐ</td>
+        <td>
+            <p>Hoàn tất</p>
+        </td>
+    </tr>`
+    });
+    return kq;
     
 }
+function getDateTime(date) {
+    var d = new Date(date);
+    var hour = d.getHours();
+    hour = (hour < 10 ? "0" : "") + hour;
+    var min  = d.getMinutes();
+    min = (min < 10 ? "0" : "") + min;
+    var sec  = d.getSeconds();
+    sec = (sec < 10 ? "0" : "") + sec;
+
+    var year = d.getFullYear();
+
+    var month = d.getMonth() + 1;
+    month = (month < 10 ? "0" : "") + month;
+
+    var day  = d.getDate();
+    day = (day < 10 ? "0" : "") + day;
+
+    return   hour + ":" + min +" - " + day + "/" + month+ "/" +year ;
+};
+/**
+ * Kết thúc xử lý order
+ */
 /**
  * Amount: Số lượng sản phẩm mặc định tại http://localhost:3000/admin/managerProduct
  */
@@ -199,33 +400,18 @@ function deletesp(){
  */
 var k=0;
 function searchsp(){
-    $('.manager-product #form-search').keyup(function (e) { 
-        var searchsp=$(this).val(),
-            url="/admin/search",
-            data={searchsp:searchsp};
-            configAjax(url,data,function(response){
-                if(response==false ){
-                    k++;
-                    $(".checksp").html('<p>Không có sản phẩm nào tên: '+searchsp+' </p>').css({"color":"red","font-weight":"bold"});
-                }else{
-                    $(".checksp").html("");
-                }
-                html= eachResulta(response);
-                $(".show-sp-search").html(html);
-            })
-        return false;
-    });
+    fixCodeSeach(".manager-product #form-search","/admin/search",function (response) {  
+        html= eachResulta(response);
+        $(".show-sp-search").html(html);
+        $("#showProduct").hide();
+    })
 }
 /**
  * Hiển thị thanh công cụ:
  */
 function showTollbar(){
-    $.ajax({
-        type: "get",
-        url: "/admin/searchtollbar",
-        dataType: "json",
-        success: function(response){
-            var html='<li class="disabled ">ADMIN</li>';
+    configGetAjax("/admin/searchtollbar",function (response) {  
+        var html='<li class="disabled ">ADMIN</li>';
             $.each(response, function( index, value ) {
                 if(value.link==location.pathname){
                     html+=`<li class="active"><a href="${value.link}">${value.name}</a></li>`;
@@ -234,8 +420,7 @@ function showTollbar(){
                 }
             });
             $(".ul-list-info").html(html);
-        }
-    });
+    })
 }
 // Chỉnh giá trị tiền
 format=function(money){
@@ -267,6 +452,7 @@ function productEditImg(){
         return false;
     });
     $(document).on('click','.CancelEditImg', function () {
+        img=0;
         $(".productEditImg").show();
         $(this).prev().remove();
         $(this).remove();

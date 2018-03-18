@@ -3,6 +3,19 @@
     padding: 0;
 }
 
+textarea#addressorder {
+    resize: none;
+}
+
+select.form-control {
+    padding: 0;
+}
+.checkTollBar li:first-child {
+    color: #27575b !important;
+    font-size: 14px !important;
+    margin: 0 0 6px 0  !important;
+}
+
 a.navbar-brand {
     font-size: 40px;
     color: white !important;
@@ -204,6 +217,7 @@ span.badge.badge-secondary.badge-pill.float-right {}
 
 main#users {
     background: #80808026;
+    padding-bottom:50px;
 }
 
 span.dhtc {

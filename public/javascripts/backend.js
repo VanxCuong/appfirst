@@ -13,7 +13,36 @@ $(document).ready(function () {
     changeQuantityCart();
     checkRegisterOrder();
     ShowComment();
+    loadTollBarUser();
 });
+
+/**
+ * Xử lý tollbar User
+ */
+function loadTollBarUser(){
+    url='/users/tollbarUser';
+    configGetAjax(url,function (res) {  
+        if(res){
+            $(".checkTollBar").html(itfTollbar(res));
+        }
+    })
+}
+function itfTollbar(res){
+    var pst=location.pathname;
+    var tollhtml="";
+    $.map(res, function (elementOrValue, indexOrKey) {
+        if(pst==elementOrValue.link){
+            tollhtml+=`<li class="active">
+            <a href="${elementOrValue.link}">${elementOrValue.name}</a>
+        </li>`;
+        }else{
+            tollhtml+=`<li class="  ">
+                <a href="${elementOrValue.link}">${elementOrValue.name}</a>
+            </li>`;
+        }
+    });
+    return tollhtml;
+}
 /**
  * Xử lý phần bình luận comment
  */
@@ -70,8 +99,6 @@ function ShowComment(){
         var product=$(".comment-product").attr("idproduct");
         var link=$(".comment-product").attr("linkProduct");
         url="/cmt/add";
-        console.log(`ID:`+idUser);
-        
         data={
             content:bl,
             user_id:idUser,
@@ -211,7 +238,6 @@ var codeSteptwo=function(res){
     }
     /** Xử lý in sản phẩm */
     Carthtml=shopCartOder(res,function(a,b) {
-        console.log(a+b);
       });
     return `<div class="back-out">
 <div class="img-back-out">
@@ -447,11 +473,9 @@ function checkRegisterOrder(){
         var url="/cart/checkcart";
         configGetAjax(url,function(response){
             if(response){
-                console.log(response);
                 editItf(".successStepOne","#stepone","#steptwo","#addCart");
                 $("#addCart").html(codeSteptwo(response));
             }else{
-                console.log("hhihi");
                 $(".successStepOne").before("<p class='text-center bg-checked mt-3'>Bạn chưa có sản phẩm nào để thanh toán.</p>");
             }
         })
@@ -477,8 +501,6 @@ function checkRegisterOrder(){
             createDataOrder[0].txtCity=dl.addresscity;
             createDataOrder[0].txtPhone=dl.phone;
             createDataOrder[0].txtMethodPay=dl.methodPay;
-            console.log(createDataOrder);
-            console.log(dl);
             var url="/cart/udi";
             configAjax(url,dl,function(response){
                 $.each(response, function (i, v) {
@@ -703,9 +725,6 @@ function AllProductSearch(){
 /**
  * Ajax Search SP
  */
-function documentSearch(url,data){
-    
-}
 /**
  * 
  * @param {*} url 
@@ -745,12 +764,7 @@ function eachResult(response){
                     <p class="card-text "> 
                         <span class="price-old">${ format(valueOfElement.price_old)} %</span> 
                         <span class="price-sale">${valueOfElement.price_sale}% </span>
-                        
                     </p>
-                </div>
-                <div class="card-footer">
-                    <a href="/admin/editproduct/${valueOfElement.link}.${valueOfElement._id}"><i class="fas fa-edit"></i> Chỉnh Sửa</a>
-                    <a href="/admin/removeproduct/${valueOfElement.link}.${valueOfElement._id}" class="float-right"><i class="fas fa-times"></i> Xóa</a>
                 </div>
             </div>
         </div>
@@ -789,11 +803,9 @@ function ShowProducts(){
         configAjax(url,data,function(response){
             var html=eachResult(response);
             $(".home-showProduct").append(html);
-            console.log(response.length);
             amount+=response.length;
-            console.log(amount);
             $(".icons-load").html('<a href="#" class="btn btn-outline-danger showProducts" idu="'+amount+'">Xem Thêm</a>')
-            if(amount % 12!=0){
+            if(response.length < 12){
                 $(".icons-load").hide();
             }
             $("#show-hu-load").hide();
@@ -815,20 +827,16 @@ function checkCategory(){
     }else{
         var html=`<li class="list-group-item d-flex justify-content-between align-items-center "><a href="/">Tất cả sản phẩm</a></li>`
     }
-    $.ajax({
-        type: "GET",
-        url: "/category",
-        success: function (response) {
-            $.each(response, function (indexInArray, valueOfElement) { 
-                if(position[2]==valueOfElement.name){
-                    html+=`<li class="list-group-item d-flex justify-content-between align-items-center active "><a href="/ctg/${valueOfElement.name}">${valueOfElement.name}</a></li>`
-                }else{
-                    html+=`<li class="list-group-item d-flex justify-content-between align-items-center "><a href="/ctg/${valueOfElement.name}">${valueOfElement.name}</a></li>`
-                }
-            });
-            $(".list-ctg").html(html);
-        }
-    });
+    configGetAjax("/category",function (response) {  
+        $.each(response, function (indexInArray, valueOfElement) { 
+            if(position[2]==valueOfElement.name){
+                html+=`<li class="list-group-item d-flex justify-content-between align-items-center active "><a href="/ctg/${valueOfElement.name}">${valueOfElement.name}</a></li>`
+            }else{
+                html+=`<li class="list-group-item d-flex justify-content-between align-items-center "><a href="/ctg/${valueOfElement.name}">${valueOfElement.name}</a></li>`
+            }
+        });
+        $(".list-ctg").html(html);
+    })
 }
 
 /**
@@ -879,40 +887,32 @@ function register(){
             sex:sex[0],
             date:date
         }
-        $.ajax({
-            type: "post",
-            url: "/register",
-            data:dl,
-            dataType: "json",
-            success: function (response) {
-                console.log(response);
-                
-                if(response==false){
-                    $(".false-email").html(UserExist);
-                }
-                if(response==true && kq==0){
-                    kq++;
-                    $("#User_register").before(UserSuccess);
-                    $("#User_register").before(accessNow);
-                    setTimeout(function(){ 
-                        $(".accessFlash").remove();
-                    }, 3000)
-                    $("#registerEmail").val("");
-                    $("#registerName").val("");
-                    $("#registerPass").val("");
-                    $("#registerReqPass").val("");
-                }
-                $.each(response, function (indexInArray, valueOfElement) { 
-                    if(valueOfElement.param==checkEmail){
-                        $(".false-email").html(checkErrEmail);
-                    }else if(valueOfElement.param==checkPassword){
-                        if(k==0){
-                            $(".checkPassword").html(checkErrPass);
-                            k++;
-                        }
-                    }
-                });
+        configAjax("/register",dl,function (response) {  
+            if(response==false){
+                $(".false-email").html(UserExist);
             }
+            if(response==true && kq==0){
+                kq++;
+                $("#User_register").before(UserSuccess);
+                $("#User_register").before(accessNow);
+                setTimeout(function(){ 
+                    $(".accessFlash").remove();
+                }, 3000)
+                $("#registerEmail").val("");
+                $("#registerName").val("");
+                $("#registerPass").val("");
+                $("#registerReqPass").val("");
+            }
+            $.each(response, function (indexInArray, valueOfElement) { 
+                if(valueOfElement.param==checkEmail){
+                    $(".false-email").html(checkErrEmail);
+                }else if(valueOfElement.param==checkPassword){
+                    if(k==0){
+                        $(".checkPassword").html(checkErrPass);
+                        k++;
+                    }
+                }
+            });
         });
         return false;
     });
@@ -977,6 +977,8 @@ function checkSesssion(){
         if(response){
             idUser=response.user_id._id;
             $(".ulcheckss").html(navHeaderUser(response));
+            // Thay tên cho USer
+            $(".name-User").html(response.user_id.fullname);
         }else{
             $(".ulcheckss").html(navHeaderUser(response));
         }

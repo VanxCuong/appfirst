@@ -2,6 +2,7 @@ var express = require('express');
 var bcrypt = require('bcryptjs');
 var user=require("../models/user");
 var order=require("../models/order");
+var tollbaruser=require("../models/tollbaruser");
 var pass=require("../keys/passportjs");
 var router = express.Router();
 
@@ -114,7 +115,7 @@ router.get('/order',checkRouter, function(req, res, next) {
  * Xử lý order đang chờ
  */
 router.get('/orderNew', checkRouter,function(req, res, next) {
-  order.find({user_id:req.user._id,status:0}).populate("product_id").exec(function (err,result) {  
+  order.find({user_id:req.user._id,status:0}).sort({_id:-1}).populate("product_id").exec(function (err,result) {  
     res.render("./user/manager-order-new",{order:result});
   })
 });
@@ -124,5 +125,22 @@ router.get('/orderNew', checkRouter,function(req, res, next) {
 router.get('/addressorder', checkRouter,function(req, res, next) {
   res.render("./user/address-order",{user:req.user});
 });
-
+/**
+ * Tollbar User
+ */
+router.get('/tollbarUser',function(req, res, next) {
+  tollbaruser.find({}).exec(function (err,result) {  
+    res.send(result);
+  })
+});
+/**
+ * Show detail product order
+ */
+router.get('/detailorder.:id',function(req, res, next) {
+  var id=req.params.id;
+  console.log(id);
+  order.findById(id).populate("product_id").populate("user_id").exec(function(err,result){
+    res.render("./user/show-orderdetail",{order:result});
+  })
+});
 module.exports = router;

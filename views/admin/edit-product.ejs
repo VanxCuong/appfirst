@@ -35,7 +35,7 @@
                     </div>
                     <div class="form-group">
                       <label for="">Giá sản phẩm</label>
-                      <input type="text" name="price"  class="form-control" value="<%= product.price_old %>" placeholder="Giá gốc sản phẩm" aria-describedby="helpId">
+                      <input type="text" name="price" required pattern="[0-9]{4,}"  class="form-control" value="<%= product.price_old %>" placeholder="Giá gốc sản phẩm" aria-describedby="helpId">
                       <small id="helpId" class="text-muted">Help text</small>
                     </div>
                     <div class="form-group">
@@ -45,12 +45,12 @@
                     </div>
                     <div class="form-group">
                       <label for="">Số lượng</label>
-                      <input type="text" name="number"  class="form-control" value="<%= product.amount %>" placeholder="Số lượng sản phẩm" aria-describedby="helpId">
+                      <input type="text" name="number" pattern="[0-9]{1,}" required class="form-control" value="<%= product.amount %>" placeholder="Số lượng sản phẩm" aria-describedby="helpId">
                       <small id="helpId" class="text-muted">Help text</small>
                     </div>
                     <div class="form-group">
                       <label for="">Đường dẫn</label>
-                      <input type="text" name="link"  class="form-control" value="<%= product.link %>" placeholder="Ví dụ: tên sản phẩm: Giày thể thao thì điền giay-the-thao" aria-describedby="helpId">
+                      <input type="text" name="link" pattern="[a-zA-Z0-9._%+-._%+//]+" required class="form-control" value="<%= product.link %>" placeholder="Ví dụ: tên sản phẩm: Giày thể thao thì điền giay-the-thao" aria-describedby="helpId">
                       <small id="helpId" class="text-muted"></small>
                     </div>
                     <div class="form-group">

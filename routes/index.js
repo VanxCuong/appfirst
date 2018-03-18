@@ -21,10 +21,6 @@ router.get("/session",function(req,res,next){
   }else{
     res.send(kq);
   }
-  console.log(`hihi:`,kq);
-  
-  
-  
 })
 router.get("/giohang",function(req,res,next){
   var arr=[];
@@ -46,14 +42,14 @@ router.get("/check",function(req,res,next){
   res.send(passportjs.arr+passportjs.arr2);
 })
 router.get('/', function(req, res, next) {
-  product.find().skip(0).limit(12).exec(function(err,result){
+  product.find().skip(0).sort({_id:-1}).limit(12).exec(function(err,result){
     res.render('index', { product:result , amountProduct:result.length});
   })
 });
 router.post('/showproducts', function(req, res, next) {
   amountProduct=req.body.amountProduct;
   console.log(amountProduct);
-  product.find().skip(Number(amountProduct)).limit(12).exec(function(err,result){
+  product.find().skip(Number(amountProduct)).sort({_id:-1}).limit(12).exec(function(err,result){
     res.send(result);
   })
 });

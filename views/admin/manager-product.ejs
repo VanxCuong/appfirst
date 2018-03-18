@@ -4,12 +4,10 @@
             <div class="jumbotron bg-white btn-block">
                 <h1 class="display-3">Quản Lý Sản Phẩm</h1>
                 <div class="manager-product-search">
-                   
-                        <div class="form-group">
-                            <input type="text" id="form-search" class="form-control" placeholder="Tìm kiếm tên sản phẩm..." >
-                            <!-- <input type="submit" id="formSearch"  class="btn btn-search"> -->
-                        </div>
-                    
+                    <div class="form-group">
+                        <input type="text" id="form-search" class="form-control" placeholder="Tìm kiếm tên sản phẩm..." >
+                        <!-- <input type="submit" id="formSearch"  class="btn btn-search"> -->
+                    </div>
                 </div>
             </div>
             <div class="col-sm-12 show-value mt-3">
@@ -21,7 +19,7 @@
                 </div>
             </div>
             <div class="col-sm-12 show-sp mt-3">
-                <div class="row show-sp-search">
+                <div class="row show-sp-search" id="reloads">
                     <% product.forEach(function(item){ %>
                     <div class="col-sm-4 mt-3 col-xs-12 ">
                         <div class="card-product">
@@ -64,12 +62,14 @@
         <div class="Hu-load text-center" style="display:none">
             <img src="/images/o2mtzbxKtid.gif" style="margin:auto" alt="">
         </div>
-        <div class="checksp text-center"></div>
+        <div class="checksp text-center" style="margin:auto; width:100%"></div>
+        <% if(product.length==9){ %>
         <div class="icons-load text-center mt-5">
-                <div class="col-sm-12" id="showProductMain">
-                    <a href="#" class="btn btn-outline-danger" id="showProduct" idsp="<%=AmountProduct%>">Xem Thêm</a>
-                </div>
+            <div class="col-sm-12" id="showProductMain">
+                <a href="#" class="btn btn-outline-danger" id="showProduct" idsp="<%=AmountProduct%>">Xem Thêm</a>
             </div>
+        </div>
+        <%}%>
     </div>
     <!-- managerinfo col:12 -->
 <% include bottom %>

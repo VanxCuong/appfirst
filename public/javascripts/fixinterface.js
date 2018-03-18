@@ -22,7 +22,7 @@ function EditUser(){
         var user_id=$(this).attr("idu");
         $.ajax({
             type: "post",
-            url: "/admin/managerusers",
+            url: "/admin/editusers",
             data: {
                 role_id:role,
                 user_id:user_id
@@ -43,7 +43,7 @@ function EditUser(){
 function penciluser(){
     var k=0,k1=0,k2=0;
     var Notsame="Bạn vui lòng nhập đúng mật khẩu";
-    $(".pencil-info").click(function (e) {
+    $(document).on('click','.pencil-info', function () {
         var id=$(this).attr("idu");
         if(k==0){ 
             $(".fix-info-now .pencil-info-hidden").css("display","none");
@@ -136,6 +136,11 @@ function penciluser(){
                         $("#success-password").html('Đổi mật khẩu thành công');
                         $(".pencil-user-show").css("display","none");
                         $(".pencil-user-info").css("display","block");
+                        $(".close-pencil-user").remove();
+                        k2=0;
+                        $("#passOld").val("");
+                        $("#passNew").val("");
+                        $("#passRep").val("");
                     } 
                     // return err
                     if(response==false){
@@ -152,7 +157,7 @@ function penciluser(){
                 }
             });
             
-            k2=0;
+            
         }
         return false;
     });

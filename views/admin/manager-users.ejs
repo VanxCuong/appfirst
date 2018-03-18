@@ -1,5 +1,5 @@
 <% include top %>
-    <div class="col-sm-9 col-xs-12 manager-order mt-3">
+    <div class="col-sm-9 col-xs-12 manager-order manager-users mt-3">
         <div class="row">
             <div class="jumbotron bg-white btn-block">
                 <h1 class="display-3">Danh sách khách hàng</h1>
@@ -10,6 +10,15 @@
                                 <input type="submit" id="formSearch"  class="btn btn-search">
                         </div>
                     </form>
+                </div>
+            </div>
+            <div class="col-sm-12 show-value mt-3">
+                <div class="float-right">
+                    <span>Lựa Chọn </span>
+                    <a href="" class="btn btn-primary">Mặc Định</a>
+                    <% role.forEach(function(item){ %>
+                    <a href="#" class="btn btn-warning selectLevel"  idu="<%= item._id%>"><%= item.role%></a>
+                    <%});%>
                 </div>
             </div>
             <div class="node-user mt-3">
@@ -27,7 +36,9 @@
                     </tr>
                 </thead>
                 <tbody id="reloads">
+                    <%sl=0%>
                     <% user.forEach(function(i){  %>
+                    <%sl++%>
                     <tr>
                         <td class="text-center"><a href=""><%= i.user_id.fullname %></a></td>
                         <td><%= i.user_id.email %></td>
@@ -51,11 +62,19 @@
                                 <a href=""class="float-right btn btn-outline-success btn-block save-user"  idu="<%= i.user_id._id %>">Lưu</a>
                             </div>
                         </td>
-
                     </tr>
                     <%});%>
                 </tbody>
             </table>
+            <div class="Hu-load text-center col-12" style="margin:auto;display:none;">
+                    <img src="/images/o2mtzbxKtid.gif"  alt="">
+            </div>
+            <div class="checksp text-center" style="margin:auto; width:100%"></div>
+            <% if(user.length==20){ %>
+            <div class="ShowUsers" style="margin:auto">
+                <a href="" class="btn btn-danger" id="ShowUsers" sl="<%= sl%>" >Xem Thêm</a>
+            </div>
+            <%}%>
         </div>
     </div>
     <!-- managerinfo col:12 -->

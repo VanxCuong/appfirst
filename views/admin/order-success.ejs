@@ -19,15 +19,15 @@
         return   hour + ":" + min +" - " + day + "/" + month+ "/" +year ;
     };
     %>
-    <div class="col-sm-9 col-xs-12 manager-order mt-3">
+    <div class="col-sm-9 col-xs-12 manager-order manager-order-success mt-3">
         <div class="row">
             <div class="jumbotron bg-white btn-block">
                 <h1 class="display-3">Tất cả đơn hàng đã giao</h1>
                 <div class="manager-product-search">
                     <form action="" method="post">
                         <div class="form-group">
-                                <input type="text" id="form-search" class="form-control" placeholder="Vd: TISSOT, LONGINES..." >
-                                <input type="submit" id="formSearch"  class="btn btn-search">
+                            <input type="text" id="form-search" class="form-control" placeholder="Tìm kiếm tên sản phẩm..." >
+                            <input type="submit" id="formSearch"  class="btn btn-search">
                         </div>
                     </form>
                 </div>
@@ -43,7 +43,7 @@
             </div>
             <table class="table table-striped table-bordered table-responsive-sm mt-3">
                 <thead class="thead-light ">
-                    <tr>
+                    <tr class="text-center">
                         <th>khách hàng</th>
                         <th>Ngày đặt hàng</th>
                         <th>Hình ảnh</th>
@@ -53,23 +53,34 @@
                         <th>Trạng thái</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="reloads">
+                    <% stt=0; %>
                     <% order.forEach(function(item){ %>
                     <tr>
+                        <% ++stt;%>
                         <td><a href=""><%= item.user_id.fullname %></a></td>
-                        <td><%= getDateTime(item.create_at) %></td>
+                        <td><%= getDateTime(item.create_at); %></td>
                         <td><a href="/show/<%= item.product_id.link %>"><img src="/uploads/<%= item.product_id.image %>" width="50" alt=""></a></td>
                         <td><%= item.product_id.name%></td>
                         <td><%= item.quanlity%></td>
-                        <td><%= format(item.quanlity*item.product_id.price_new) %> VNĐ</td>
+                        <td><%= format(item.quanlity*item.product_id.price_new); %> VNĐ</td>
                         <td>
                             <p>Hoàn tất</p>
 
                         </td>
                     </tr>
-                    <%})%>
+                    <%});%>
                 </tbody>
             </table>
+            <div class="Hu-load text-center col-12" style="margin:auto;display:none;">
+                    <img src="/images/o2mtzbxKtid.gif"  alt="">
+            </div>
+            <div class="checksp text-center" style="margin:auto; width:100%"></div>
+            <% if(order.length==20){ %>
+            <div class="showOrderSucces" style="margin:auto;">
+                <a href="#" class="btn btn-danger" id="showOrderSucces" sl="<%= stt; %>" </a>Xem Thêm</a>
+            </div>
+            <%}%>
         </div>
     </div>
     <!-- managerinfo col:12 -->
