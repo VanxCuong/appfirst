@@ -298,6 +298,9 @@ router.post("/search",function(req,res,next){
 /**
  * Kết thúc Xử lý Quản lý Sản Phẩm
  */
+/**
+ * Xử lý Order
+ */
 router.get('/managerOrder',checkRouter, function(req, res, next) {
   order.find({status:0}).populate("product_id").populate("user_id").exec(function (err,result) {
     res.render('./admin/manager-order', { order:result });
@@ -313,6 +316,13 @@ router.get('/handlingStatus/:id',checkRouter, function(req, res, next) {
 router.get('/delOrder/:id',checkRouter, function(req, res, next) {
   order.remove({_id:req.params.id},function (err,result) {  
     res.send(true);
+  })
+});
+// order detail
+router.get('/detailOrder/:id',checkRouter, function(req, res, next) {
+  var id=req.params.id;
+  order.findById(id).populate("product_id").populate("user_id").exec(function (err,result) {  
+    res.render("./admin/detail-order",{order:result});
   })
 });
 
@@ -657,4 +667,11 @@ router.get("/router/:id",function (req,res,next) {
   });
 })
 // Kết thúc router
+
+/**
+ * Xử lý Slide
+ */
+router.get("/slided",function (req,res,next) {  
+  
+})
 module.exports = router;

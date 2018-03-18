@@ -47,10 +47,10 @@
                         <th>khách hàng</th>
                         <th>Ngày đặt hàng</th>
                         <th>Hình ảnh</th>
-                        <th>Tên sản phẩm</th>
                         <th>Số lượng</th>
                         <th>Tổng cộng</th>
                         <th>Trạng thái</th>
+                        <th>Khác</th>
                     </tr>
                 </thead>
                 <tbody id="reloads">
@@ -61,13 +61,10 @@
                         <td><a href=""><%= item.user_id.fullname %></a></td>
                         <td><%= getDateTime(item.create_at); %></td>
                         <td><a href="/show/<%= item.product_id.link %>"><img src="/uploads/<%= item.product_id.image %>" width="50" alt=""></a></td>
-                        <td><%= item.product_id.name%></td>
                         <td><%= item.quanlity%></td>
                         <td><%= format(item.quanlity*item.product_id.price_new); %> VNĐ</td>
-                        <td>
-                            <p>Hoàn tất</p>
-
-                        </td>
+                        <td><p>Hoàn tất</p></td>
+                        <td><a href="/admin/detailOrder/<%= item._id %>">Chi tiết</a></td>
                     </tr>
                     <%});%>
                 </tbody>

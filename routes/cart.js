@@ -13,7 +13,6 @@ router.get('/', function(req, res, next) {
       data=null;
     }else{
       data=giohang.convertArray();
-      console.log(data);
     }
   }
   res.render("cart",{showCart:data});
