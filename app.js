@@ -21,7 +21,8 @@ var ctg = require('./routes/ctg');
 var show = require('./routes/show');
 
 var app = express();
-mongoose.connect('mongodb://localhost:27017/firstapp',function(err){
+// mongodb://localhost:27017/firstapp
+mongoose.connect('mongodb://vanxcuong:12345612@ds117759.mlab.com:17759/firstapp',function(err){
   if(err){
     console.log("Connect database failed !!!");
   }else{
