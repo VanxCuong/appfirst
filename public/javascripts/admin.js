@@ -11,9 +11,39 @@ $(document).ready(function () {
     handlingOrder();
     ShowComments();
     ShowUsers();
-    
+    EditImgSlide();
 });
-
+/**
+ * Xử lý Slider
+ */
+/**
+ * $(this).after('<input type="file" name="imagesProduct"  class="form-control" >');
+            $(this).next().after('<a href="#" class="CancelEditImg btn btn-danger mt-3">Hủy</a>');
+ */
+var insert=`
+    <div class="edit-picture">
+        <input type="file" name="imagesProduct"  class="form-control" >
+        <a href="#" class="CancelEditImg btn btn-danger mt-3">Hủy</a>
+    </div>
+`;
+function EditImgSlide(){
+    var click=0;
+    $(document).on('click','.show-edit-img', function () {
+        
+        if(click==0){
+            click++;
+            console.log('click:'+click);
+        
+            $(this).parent().after(insert);
+        }
+        return false;
+    });
+    $(document).on('click',".CancelEditImg", function () {
+        click=0;
+        $(this).parent().remove();
+        return false;
+    });
+}
 /**
  * Hàm tối ưu code click xem thêm sản phẩm
  * @param {*} a : Class or ID Click

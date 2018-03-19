@@ -19,12 +19,8 @@ function escapeRegex(text) {
 router.post("/search",function(req,res,next){
 var searchsp=req.body.searchsp;
 var idctg=req.body.idctg;
-console.log(idctg+searchsp);
-
 const regex=new RegExp(escapeRegex(searchsp),'gi');
 product.find({name:regex,category_id:idctg},function(err,result){
-    console.log(result);
-    
     if(result.length<1){
         res.send(false);
     }else{

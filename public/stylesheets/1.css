@@ -138,7 +138,7 @@ p#success-password {
     right: 25%;
     top: 0px;
     height: 28px;
-    background: url("http://localhost:3000/images/search2.png") no-repeat;
+    background: url("/images/search2.png") no-repeat;
     text-indent: -999px;
     border: none;
     width: 4%;
@@ -756,7 +756,7 @@ div#category .col-sm-12 {
 
 .show-category ul li a:before {
     content: "";
-    background: url("http://localhost:3000/images/ten1.gif") no-repeat;
+    background: url("/images/ten1.gif") no-repeat;
     height: 20px;
     width: 20px;
     position: absolute;

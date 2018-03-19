@@ -12,6 +12,7 @@ var routerWeb=require("../models/router");
 var GrRole=require("../models/GrRole");
 var user=require("../models/user");
 var RoleUser=require("../models/RoleUser");
+var slide=require("../models/slide");
 var arr=require("../keys/passportjs");
 var router = express.Router();
 
@@ -27,7 +28,6 @@ var storage = multer.diskStorage({
 function fileFilter (req, file, cb) {
 if(!file.originalname.match(/\.(jpg|png|gif|jpeg|PNG)$/)){
   cb(new Error('Bạn Chỉ được upload file ảnh'));
-  console.log('Bạn chỉ được upload file Ảnh');
 }else{
   cb(null, true);
 }
@@ -671,7 +671,69 @@ router.get("/router/:id",function (req,res,next) {
 /**
  * Xử lý Slide
  */
-router.get("/slided",function (req,res,next) {  
+router.get("/slided",checkRouter,function (req,res,next) {  
+  slide.find().exec(function(err,result){
+    res.render("./admin/manager-slide",{slide:result});
+  })
   
 })
+router.post("/slided",upload,checkRouter,function (req,res,next) {
+  console.log(req.file);
+  if(req.file==undefined){
+    res.send("<h3 class='text-center mt-4'>Bạn Chưa Upload Ảnh</h3>");
+  }else{
+    var images=req.file.path.split("\\"),
+      link=req.body.link,
+      dl={
+        image:images[2],
+        link:link
+      };
+      slide.create(dl,function(err,result){
+        if(err){
+          console.log("Thêm ảnh lỗi rồi.");
+          
+          res.send("<h3 class='text-center mt-4'>Bạn Chưa Upload Ảnh</h3>");
+        }else{
+           res.redirect('/admin/slided');
+        }
+      })
+  }
+})
+router.get("/editSlider/*.:id",checkRouter,function(req,res,next){
+  var id=req.params.id;
+  slide.findById(id).exec(function(err,result){
+
+    res.render("./admin/edit-slider",{slide:result});
+  })
+})
+router.post("/sucessSlide/:id",upload,checkRouter,function(req,res,next){
+  var id=req.params.id;
+  var dl={};
+  if(req.file==undefined){
+    dl={
+      link:req.body.link
+    };
+  }else{
+    var images=req.file.path.split("\\");
+    dl={
+      image:images[2],
+      link:req.body.link
+    }
+  }
+  slide.updateOne({_id:id},dl,function(err,result){
+    if(result){
+      res.redirect("/admin/slided");
+    }
+  });
+})
+// Xóa slider
+router.get("/delSlider/:id",checkRouter,function(req,res,next){
+  var id=req.params.id;
+  slide.deleteOne({_id:id},function(err,result){
+      res.redirect("/admin/slided");
+  })
+})
+/**
+ * Kết thúc xử lý slider
+ */
 module.exports = router;

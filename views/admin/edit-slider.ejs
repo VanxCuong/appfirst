@@ -1,0 +1,28 @@
+<% include top %>
+    <div class="col-sm-9 col-xs-12 admin-tollbar mt-3">
+        <div class="row">
+            <div class="jumbotron bg-white col-12">
+                <h1 class="display-3">Chỉnh Sửa Slider</h1>
+
+                <hr class="my-2">
+                <form action="/admin/sucessSlide/<%= slide._id %>" method="post" enctype="multipart/form-data">
+                    <div class="form-group  mt-3">
+                    <label for="" style="padding-right:10px">Ảnh đại diện</label>
+                    <img src="/uploads/<%= slide.image %>" style=" height: 150px;width: 400px;" class="img-thumbnail img-responsive img-rounded img-slide"   alt="">
+                    <span style="padding-left:10px" class="show-edit-img"><a href="">Sửa Ảnh</a></span>
+                    </div>
+                    <div class="form-group ">
+                        <label for="slider-link">Đường dẫn</label>
+                        <input type="text" name="link" id="slider-link" class="form-control" value="<%=slide.link%>" placeholder="Đường dẫn sản phẩm ...." >
+                        <small id="helpId" class="text-muted">Ví dụ: http://localhost:3000/admin/editSlider/.5aaf227cc422e8168070e86e</small>
+                    </div>
+                    <div class="form-group  mt-5">
+                        <button type="submit" class="btn btn-outline-primary btn-block">Submit</button>
+                        <a href="/admin/slided" class="btn btn-outline-warning btn-block">Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- managerinfo col:12 -->
+<% include bottom %>                

@@ -2,27 +2,22 @@
     <div class="col-sm-9 col-xs-12 admin-tollbar mt-3">
         <div class="row">
             <div class="jumbotron bg-white btn-block">
-                <h1 class="display-3">Thêm Đường dẫn website</h1>
+                <h1 class="display-3">Quản lý slide trang chủ</h1>
                 <p class="lead"></p>
                 <hr class="my-2">
-                <form action="/admin/router" method="post">
-                    <div class="form-group rgt-info">
-                    <label for="idNameTollBar">Tên đường dẫn</label>
-                      <input type="text" name="name" id="idNameTollBar" title="Tên Mục" class="form-control" required="" minlength="3"  placeholder="Ví dụ: Quản Lý Admin...">
-                      <div>  <span class="require-form">*</span></div>
+                <form action="/admin/slided" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                      <label for="">Chọn ảnh</label>
+                      <input type="file" class="form-control-file" name="imagesProduct" >
+                      <small id="fileHelpId" class="form-text text-muted">Lựa chọn ảnh</small>
                     </div>
-                    <div class="form-group rgt-info">
-                    <label for="idrole">Vai trò</label>
-                      <select class="form-control" name="role" id="idrole">
-                        <option value="">Lựa chọn</option>    
-                        <% role.forEach(function(i){ %>
-                          <option value="<%= i._id %>"><%= i.role %></option>
-                        <%}) %>
-                      </select>
-                      <div>  <span class="require-form">*</span></div>
+                    <div class="form-group" >
+                        <label for="">Đường dẫn</label>
+                        <input type="text" name="link" id="" class="form-control" placeholder="Đường dẫn ảnh." >
+                        <small id="helpId" class="text-muted">Ví dụ:http://localhost:3000/admin/slided</small>
                     </div>
                     <div class="form-group">
-                      <input type="submit" class="form-control btn btn-outline-danger"  value="Thêm" >
+                      <button type="submit" class="btn btn-primary btn-block">Thêm mới</button>
                     </div>
                 </form>
                 
@@ -32,16 +27,41 @@
                 <h1 class="display-3">Quản lý Thanh Công Cụ</h1>
                 <p class="lead"></p>
                 <hr class="my-2">
-                <ul class="list-group mt-3">
-                    <% router.forEach(function(item){%>
-                    <li class="list-group-item d-flex justify-content-between align-items-center ">
-                    <%=item.router_id.name%>   -   <%=item.role_id.role %>
-                        <span class="badge badge-secondary badge-pill" >
-                            <a href="/admin/router/<%= item._id%>" class="remove-category"  onclick="if(!confirm('Bạn có muốn xóa không ?')){return false;}" >Xóa</a>
-                        </span>
-                    </li>
-                    <%})%>
-                </ul>
+                <table class="table table-striped table-bordered table-responsive-sm ">
+                    <thead class="thead-light ">
+                        <tr>
+                            <th>Hình Ảnh</th>
+                            <th>Đường dẫn</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <% slide.forEach(function(item){ %>
+                            <tr>
+                                <td>
+                                    <div class="img-slide" >
+                                        <img src="/uploads/<%= item.image %>" style="width:150px;height:100px"></td>
+                                    </div>
+                                    
+                                <td>
+                                    <p class="text-center link-slide"> 
+                                    <% if(item.link==""){%> 
+                                        Chưa có Link  
+                                    <%}else{%>
+                                      <%= item.link %>
+                                    <%}%>
+                                        </p>
+                                </td>
+                                <td>
+                                    <div class="mg-slide">
+                                        <a href="/admin/editSlider/<%= item.link%>.<%= item._id%>" class="btn btn-outline-danger btn-block" id="edit-img-slide" idu="">Chỉnh Sửa</a>
+                                        <a href="/admin/delSlider/<%= item._id%>" onclick="if(!confirm('Bạn có muốn Xóa Slider này không ??')){ return false; }" class="btn btn-outline-success btn-block" id="del-img-slide">Xóa</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                </table>
             </div>
             <!-- jumbotron -->
         </div>

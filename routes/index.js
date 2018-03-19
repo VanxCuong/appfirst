@@ -4,6 +4,7 @@ var category=require("../models/category");
 var comments=require("../models/comments");
 var GrRole=require("../models/GrRole");
 var RoleUser=require("../models/RoleUser");
+var slide=require("../models/slide");
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
   var bcrypt = require('bcryptjs');
@@ -41,9 +42,15 @@ router.get("/category",function(req,res,next){
 router.get("/check",function(req,res,next){
   res.send(passportjs.arr+passportjs.arr2);
 })
+/**
+ * Xử lý phần giao diện trang chủ.
+ */
 router.get('/', function(req, res, next) {
   product.find().skip(0).sort({_id:-1}).limit(12).exec(function(err,result){
-    res.render('index', { product:result , amountProduct:result.length});
+    slide.find({},function(err,slide){
+      res.render('index', { product:result , amountProduct:result.length,slide:slide});
+    })
+    
   })
 });
 router.post('/showproducts', function(req, res, next) {
