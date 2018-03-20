@@ -3,6 +3,20 @@
     padding: 0;
 }
 
+main.main-orther {
+    height: 300px;
+    background: #edf5f4;
+}
+
+h3.mt-3.title-ct,.form-contact .title-fc {
+    text-shadow: 3px 1px 3px #23200b7a;
+    font-weight: bold;
+    font-size: 35px;
+    text-transform: uppercase;
+    color: #11383e;
+    font-family: sans-serif;
+}
+
 textarea#addressorder {
     resize: none;
 }
@@ -20,6 +34,13 @@ a.navbar-brand {
     font-size: 40px;
     color: white !important;
     font-family: initial;
+}
+
+a.navbar-brand img {
+    width: 50px;
+    position: relative;
+    bottom: 6px;
+    left: 17px;
 }
 
 .manager-order-new th {
@@ -811,6 +832,15 @@ a.dropdown-item:hover {
     background: none;
     color: #fff;
     transition: all 0.2s;
+    position: relative;
+    left: 7px;
+    font-family: -webkit-pictograph;
+}
+
+a.dropdown-item {
+    position: relative;
+    left: 0px;
+    transition: all 0.2s ease;
 }
 
 a.dropdown-item {

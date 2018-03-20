@@ -822,6 +822,7 @@ function ShowProducts(){
 function checkCategory(){
     var position=location.pathname;
         position=position.split("/");
+        xNavHeader="";
     if(!position[2]){
         var html='<li class="list-group-item d-flex justify-content-between align-items-center active "><a href="#">Tất cả sản phẩm</a></li>'
     }else{
@@ -834,8 +835,10 @@ function checkCategory(){
             }else{
                 html+=`<li class="list-group-item d-flex justify-content-between align-items-center "><a href="/ctg/${valueOfElement.name}">${valueOfElement.name}</a></li>`
             }
+            xNavHeader+=`<a class="dropdown-item" href="/ctg/${valueOfElement.name}">${valueOfElement.name}</a>`;
         });
         $(".list-ctg").html(html);
+        $(".mn-parent").html(xNavHeader);
     })
 }
 

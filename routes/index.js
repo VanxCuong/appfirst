@@ -11,6 +11,18 @@ var passport = require('passport')
 var user=require("../models/user");
 var passportjs=require("../keys/passportjs");
 var router = express.Router();
+/**
+ * contact
+ */
+router.get("/contact",function(req,res,next){
+  res.render("contact");
+})
+router.get("/News",function(req,res,next){
+  res.render("orther");
+})
+router.get("/buys",function(req,res,next){
+  res.render("orther");
+})
 /* GET home page. */
 router.get("/session",function(req,res,next){
   var kq="";
