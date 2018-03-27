@@ -66,40 +66,74 @@
     </footer>
     <!-- Modal -->
     <div class="modal fade" id="form-dangnhap" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Đăng Nhập</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
-                <div class="modal-body">
-                    <form action="/login" method="post">
-                        <div class="form-group">
-                          <label for="">Email</label>
-                          <input type="email" name="username" id="username-access" class="form-control" placeholder="email@gmail.com" aria-describedby="helpId">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Mật khẩu</label>
-                            <input type="password" name="password"  id="password-access" maxlength="12" class="form-control" placeholder="Nhập mật khẩu" aria-describedby="helpId">
-                        </div>
-                        <div class="form-group">
-                                <button type="submit" class="btn btn-outline-success btn-block ">Đăng Nhập</button>
-                                <!-- <button type="button" class="btn btn-outline-primary btn-block" id="UserAcess">Đăng Nhập</button> -->
-                        </div>
-                        <div class="form-group">
-                            
-                            <a href="/register" class="btn btn-outline-danger btn-block">Đăng Ký</a>
-                            
-                        </div>
-                    </form>
-                </div>
-
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Đăng Nhập</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
             </div>
+            <div class="modal-body">
+                <form action="/login" method="post">
+                    <div class="form-group">
+                        <label for="">Email</label>
+                        <input type="email" name="username" id="username-access" class="form-control" placeholder="email@gmail.com" aria-describedby="helpId">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Mật khẩu</label>
+                        <input type="password" name="password"  id="password-access" maxlength="12" class="form-control" placeholder="Nhập mật khẩu" aria-describedby="helpId">
+                    </div>
+                    <div class="form-group">
+                            <button type="submit" class="btn btn-outline-success btn-block ">Đăng Nhập</button>
+                            <!-- <button type="button" class="btn btn-outline-primary btn-block" id="UserAcess">Đăng Nhập</button> -->
+                    </div>
+                    <div class="form-group">
+                        
+                        <a href="/register" class="btn btn-outline-danger btn-block">Đăng Ký</a>
+                        
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        </div>
+    </div>
+    <!-- end -->
+    <div class="scrollTop" style="display:none">
+        <img src="/uploads/backTop.png" title="Back Top">
+    </div>
+    <div class="feedback">
+        <div class="fd-nav" title="Hiển thị khung hỗ trợ" >
+            <p class="if-fd  "><i class="fas fa-envelope"></i> Hỗ Trợ - <span class="event-fd"><i>Nhấp chuột vào đây</i></span></p>
+        </div>
+        <div class="fb-show" style="display:none" >
+            <div class="card">
+              <div class="card-header">Hỗ trợ <span class="fd-hide"><i class="far fa-window-minimize"></i></span></div>
+              
+              <div class="card-body">
+                <p class="title-body">Bạn là ai *</p>
+                    <input type="text"  class="form-control" id="txtFDName" placeholder="Họ & Tên">
+                    <div class="fd-t-n fd-t"></div>
+                    <input type="email"  class="form-control" id="txtFDEmail" placeholder="Email" >
+                    <div class="fd-t-e fd-t"></div>
+                    <input type="text"  class="form-control" id="txtFDPhone" placeholder="Số điện thoại" >
+                    <div class="fd-t-p fd-t"></div>
+                <p class="title-body">Nội Dung *</p>
+                    <textarea  class="form-control" placeholder="Nhập câu hỏi..." id="txtFDContent" ></textarea>
+                    <div class="fd-t-c fd-t"></div>
+              </div>
+              <div class="card-footer">
+                  <a href="#" class="btn btn-success form-control" id="feedback-sb" >Gửi yêu cầu <span class="fd-load-now" style="display:none" ><img src="/uploads/load.gif" style="width:40px" alt=""></span></a>
+              </div>
+              <div class="fb-success" style="display:none">
+                <div class="alert alert-success" role="alert">
+                    <strong>Chúc mừng bạn!!</strong> Bạn gửi hỗ trợ thành công vui lòng đợi hồi đáp.
+                </div>
+              </div>
             </div>
         </div>
-        
+    </div>
     <script  src="/javascripts/font-awesome.js"></script>
     
     <script type="text/javascript" src="/javascripts/1.js"></script>

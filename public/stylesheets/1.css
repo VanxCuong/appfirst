@@ -3,6 +3,104 @@
     padding: 0;
 }
 
+small.ct-global {
+    color: red !important;
+    font-family: serif;
+    font-size: 12px;
+}
+
+.feedback .fd-t {
+    color: red;
+    font-size: 12px;
+    font-family: serif;
+}
+
+.feedback .fb-show .card-body textarea#txtFDContent {
+    resize: none;
+    height: 100px;
+}
+
+.feedback .fb-show .card-body input#txtFDName, .feedback .fb-show .card-body input#txtFDEmail, .feedback .fb-show .card-body textarea#txtFDContent, .feedback .fb-show .card-body input#txtFDPhone {
+    margin: 10px 0 !important;
+}
+
+.feedback .fb-show .card-body p input#txtFDName {
+}
+
+.feedback .fb-show .card-header span.fd-hide {position: absolute;top: 45%;right: 15px;transform: translateY(-50%);}
+
+.feedback .fb-show .card-header {
+    background: #1a444a !important;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 10px 0px 5px 20px;
+    position: relative;
+}
+
+.feedback .fb-show .card-body {
+    padding: 10px 20px;
+    height: 300px;
+    overflow-y: auto;
+    background: #f3f3f3;
+}
+
+.feedback .fb-show .card-body p.title-body {
+    font-size: 16px;
+    margin: 0;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.feedback .fb-show {
+    box-shadow: 1px 3px 11px 1px #a99f9f;
+    border-top-left-radius:  8px;
+}
+
+.feedback .fd-nav .if-fd span.event-fd {
+    font-size: 11px;
+    font-weight: normal;
+    color: #f9f2f2;
+}
+
+.feedback .fd-nav {background: #1f4b50;border-top-left-radius: 5px;}
+
+.feedback {
+    width: 20%;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.feedback .fd-nav .if-fd {
+    color: white !important;
+    margin: 0;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    padding: 7px 0;
+}
+
+.scrollTop {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    bottom: 40px;
+    right: 10px;
+    cursor: pointer;
+    z-index: 2;
+    transition: 0.2s all ease;
+}
+
+.scrollTop img {
+    width: 40px;
+    background: #21b374;
+    box-shadow: 1px 2px 5px 1px #698069;
+    border-radius: 50%;
+}
+
 main.main-orther {
     height: 300px;
     background: #edf5f4;
@@ -664,9 +762,6 @@ span.status-product.pull-right .float-right {
     color: #666;
     text-decoration: none;
     transition: all 0.3s cubic-bezier(0.25, 0.1, 0, 0.99);
-}
-
-a {
 }
 
 .footer .crossbar {

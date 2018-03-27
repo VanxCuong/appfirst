@@ -28,26 +28,44 @@
                     <form action="" method="post">
                         <div class="form-group row">
                             <div class="col-sm-6">
-                                <input type="text" name="" class="form-control" placeholder="Họ & Tên *" >
+                                <input type="text" id="ct-name" class="form-control" placeholder="Họ & Tên *" >
+                                <small id="helpId" class="text-muted ct-global ct-name"></small>
                             </div>
                             <div class="col-sm-6">
-                                <input type="text" name="" class="form-control" placeholder="Địa Chỉ Email" >
+                                <input type="text" id="ct-email" class="form-control" placeholder="Địa Chỉ Email" >
+                                <small id="helpId" class="text-muted ct-global ct-email"></small>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-12">
-                                <input type="text" name=""  class="form-control" placeholder="Tiêu Đề *" >
+                                <input type="text" id="ct-phone"  class="form-control" placeholder="Số điện thoại *" >
+                                <small id="helpId" class="text-muted ct-global ct-phone"></small>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-12">
-                                <textarea name="" class="form-control" placeholder="Nội Dung *" ></textarea>
+                                <input type="text" id="ct-title"  class="form-control" placeholder="Tiêu Đề *" >
+                                <small id="helpId" class="text-muted ct-global ct-title"></small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <textarea name="" class="form-control" id="ct-content" placeholder="Nội Dung *" ></textarea>
+                                <small id="helpId" class="text-muted ct-global ct-content"></small>
                             </div>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-outline-danger btn-block">Gửi</button>
+                            <a href="#" class="btn btn-outline-danger btn-block" id="ct-sb">Gửi</a>
                         </div>
                     </form>
+                    <div class="fb-success" style="display:none">
+                        <div class="alert alert-success" role="alert">
+                            <strong>Chúc mừng bạn!!</strong> Bạn gửi hỗ trợ thành công vui lòng đợi hồi đáp.
+                        </div>
+                    </div>
+                    <div id="show-hu-load" style="display:none">
+                        <img src="/images/o2mtzbxKtid.gif" style="position: relative;left: 50%;transform: translateX(-50%);margin-top: 30px;" alt="">
+                    </div>
                 </div>
                 <!-- form-contact -->
             </div>

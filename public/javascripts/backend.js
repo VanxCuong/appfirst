@@ -14,8 +14,108 @@ $(document).ready(function () {
     checkRegisterOrder();
     ShowComment();
     loadTollBarUser();
+    fdSupport();
+    ContactSuport();
 });
-
+function ContactSuport(){
+    var spam=0;
+    $('#ct-sb').click(function (e) { 
+        // Fix spam
+        if(spam==0){
+            spam++;
+            $("#show-hu-load").show();
+            var name=$("#ct-name").val(),
+            email=$("#ct-email").val(),
+            phone=$("#ct-phone").val(),
+            title=$("#ct-title").val(),
+            content=$("#ct-content").val(),
+            data={
+                name:name,email:email,phone:phone,content:content,title:title
+            },
+            url="/support/contact";
+            configAjax(url,data,function (res) {  
+                if(res){
+                    if(res==true){
+                        $("#ct-sb").parent().parent().next().show();
+                        $("#ct-sb").parent().parent().remove();
+                    }
+                    if(typeof(res)=="object"){
+                        $.map(res, function (e, i) {
+                            if(Object.is(e.param,"name")){
+                                $(".ct-name").html(e.msg);
+                            } 
+                            if(Object.is(e.param,"phone")){
+                                $(".ct-phone").html(e.msg);
+                            }
+                            if(Object.is(e.param,"email")){
+                                $(".ct-email").html(e.msg);
+                            }
+                            if(Object.is(e.param,"content")){
+                                $(".ct-content").html(e.msg);
+                            }
+                            if(Object.is(e.param,"title")){
+                                $(".ct-title").html(e.msg);
+                            }
+                            return false;
+                        });
+                    }
+                    $("#show-hu-load").hide();
+                }
+            })
+        }
+        
+        return false;
+    })
+}
+function fdSupport(){
+    var spam=0;
+    $(document).on('click','#feedback-sb', function () {
+        if(spam==0){
+            $(".fd-load-now").show();
+            spam++;
+            var name=$("#txtFDName").val(),
+            email=$("#txtFDEmail").val(),
+            phone=$("#txtFDPhone").val(),
+            content=$("#txtFDContent").val(),
+            data={
+                name:name,email:email,phone:phone,content:content
+            },
+            url="/support/customer";
+            configAjax(url,data,function(res){
+                if(res){
+                    if(typeof(res)=="object"){
+                        $.map(res, function (e, i) {
+                            if(Object.is(e.param,"name")){
+                                $(".fd-t-n").html(e.msg);
+                            } 
+                            if(Object.is(e.param,"phone")){
+                                $(".fd-t-p").html(e.msg);
+                            }
+                            if(Object.is(e.param,"email")){
+                                $(".fd-t-e").html(e.msg);
+                            }
+                            if(Object.is(e.param,"content")){
+                                $(".fd-t-c").html(e.msg);
+                            }
+                            return false;
+                        });
+                    }
+                    if(res==true){
+                        $("#feedback-sb").parent().next().show();
+                        $("#feedback-sb").parent().prev().remove();
+                        $("#feedback-sb").parent().remove();
+                    }
+                    $(".fd-load-now").hide();
+                }
+    
+            })
+        }
+        
+        
+        return false;
+    });
+    
+}
 /**
  * Xử lý tollbar User
  */
