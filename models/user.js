@@ -9,6 +9,8 @@ const schema=new Schema({
     id:{type:Number},
     address:{type:String},
     sex:{type:Boolean,default:1},
+    resetPasswordToken:{type:String},
+    resetPasswordExpires:{type:Date},
     order_id:{type: Schema.Types.ObjectId, ref: 'Order' },
     create_at:{type:Date,default:Date.now},
     level:{type:Number,default:1}

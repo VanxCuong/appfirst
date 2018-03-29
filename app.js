@@ -20,6 +20,7 @@ var admin = require('./routes/admin');
 var ctg = require('./routes/ctg');
 var show = require('./routes/show');
 var support = require('./routes/support');
+var forget = require('./routes/forget');
 
 var app = express();
 // mongodb://localhost:27017/firstapp   - mongodb://vanxcuong:12345612@ds117759.mlab.com:17759/firstapp
@@ -68,6 +69,7 @@ app.use('/admin', admin);
 app.use('/ctg', ctg);
 app.use('/show', show);
 app.use('/support', support);
+app.use('/forget', forget);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
