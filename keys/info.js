@@ -1,5 +1,5 @@
 data={
-    email:"xNo1xTLTxLvv@gmail.com",
-    password:"/cuibap12"
+    email:"emailtest@gmail.com",
+    password:"123456"
 }
 module.exports.data=data;
